@@ -73,6 +73,6 @@ jobs:
 
 
     - name: Run pytest unittests on macos and windows
-    #   if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
       run: |
         python3 -m pytest tests
