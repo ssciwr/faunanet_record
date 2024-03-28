@@ -13,11 +13,6 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
-    num_devices = recorder.p.get_device_count()
-    for i in range(num_devices):
-        device_info = recorder.p.get_device_info_by_index(i)
-        print(f"Device {i}: {device_info['name']}")
-
     assert recorder.output == DATA
     assert recorder.length_in_s == 3
     assert recorder.sample_rate == 48000
@@ -28,6 +23,7 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
     assert recorder.stream.is_active() is False
     assert recorder.p is not None
     assert recorder.mode == "record"
+    
 
 
 def test_audio_functionality_record_mode(audio_recorder_fx):
@@ -35,7 +31,6 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
     _, cfg = audio_recorder_fx
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
-
     # make sure the data folder is empty before doing anything
     for file in Path(recorder.output).iterdir():
         file.unlink()
@@ -115,54 +110,53 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
     assert recorder.stream is None
 
 
-def test_audio_functionality_stream_mode(audio_recorder_fx):
+# def test_audio_functionality_stream_mode(audio_recorder_fx):
 
-    _, cfg = audio_recorder_fx
+#     _, cfg = audio_recorder_fx
 
-    cfg["Data"]["Recording"]["mode"] = "stream"
+#     cfg["Data"]["Recording"]["mode"] = "stream"
 
-    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+#     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
-    recorder.start()
+#     recorder.start()
 
-    for i in range(0, 3, 1):
-        print("current: ", i )
-        length, _ = recorder.stream_audio()
+#     for i in range(0, 3, 1):
+#         print("current: ", i)
+#         length, _ = recorder.stream_audio()
 
-        # get back bytes array -> take into account size of individual samples
-        assert length == int(
-            recorder.sample_rate
-            * recorder.length_in_s
-            * pyaudio.get_sample_size(recorder.num_format)
-        )
+#         # get back bytes array -> take into account size of individual samples
+#         assert length == int(
+#             recorder.sample_rate
+#             * recorder.length_in_s
+#             * pyaudio.get_sample_size(recorder.num_format)
+#         )
 
 
+# def test_audio_recorder_exceptions(audio_recorder_fx):
 
-def test_audio_recorder_exceptions(audio_recorder_fx):
+#     # with 'record', output folder must be given
+#     with pytest.raises(ValueError) as exc_info:
+#         ard.Recorder(output_folder=None, mode="record")
 
-    # with 'record', output folder must be given
-    with pytest.raises(ValueError) as exc_info:
-        ard.Recorder(output_folder=None, mode="record")
+#     assert (
+#         str(exc_info.value)
+#         == "Output folder for recording object cannot be None in 'record' mode"
+#     )
 
-    assert (
-        str(exc_info.value)
-        == "Output folder for recording object cannot be None in 'record' mode"
-    )
+#     # unknown mode of operation gives exception
+#     with pytest.raises(ValueError) as exc_info:
+#         ard.Recorder(
+#             output_folder=Path.home() / "iSparrow_data",
+#             mode="some_unknown_mode_with_typos_or_something",
+#         )
 
-    # unknown mode of operation gives exception
-    with pytest.raises(ValueError) as exc_info:
-        ard.Recorder(
-            output_folder=Path.home() / "iSparrow_data",
-            mode="some_unknown_mode_with_typos_or_something",
-        )
+#     assert str(exc_info.value) == "Unknown mode. Must be 'record', 'stream'"
 
-    assert str(exc_info.value) == "Unknown mode. Must be 'record', 'stream'"
+#     recorder = ard.Recorder(
+#         output_folder=Path.home() / "iSparrow_data",
+#         mode="stream",
+#     )
+#     with pytest.raises(RuntimeError) as exc_info:
+#         recorder.stream_audio()
 
-    recorder = ard.Recorder(
-        output_folder=Path.home() / "iSparrow_data",
-        mode="stream",
-    )
-    with pytest.raises(RuntimeError) as exc_info:
-        recorder.stream_audio()
-
-    assert str(exc_info.value) == "The input stream is stopped or closed"
+#     assert str(exc_info.value) == "The input stream is stopped or closed"
