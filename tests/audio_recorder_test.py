@@ -1,10 +1,8 @@
-from iSparrow import audio_recording as ard
+from iSparrowRecord import audio_recording as ard
 from pathlib import Path
 import pyaudio
 from datetime import datetime
 import librosa
-import pytest
-
 
 def test_audio_recorder_creation(folders, audio_recorder_fx):
     _, DATA, _, _, _ = folders
