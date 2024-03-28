@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 import yaml
 import platform
+import pyaudio
 
 HOME = None
 DATA = None
@@ -103,7 +104,15 @@ def install(request):
     OUTPUT = output
     EXAMPLES = examples
 
-    print("Installation finished")
+    print("Installation finished, check audio devices: ")
+
+    p = pyaudio.PyAudio()
+
+    n = p.get_device_count()
+
+    for i in range(n):
+        info = p.get_device_info_by_index(i)
+        print(f"Device {i}: {info['name']}")
 
     # remove again after usage
     def teardown():
@@ -135,7 +144,7 @@ def audio_recorder_fx():
             "input_device_index"
         ] = None  # not specific, use default
     elif platform.system() == "Windows":
-        default_cfg["Data"]["Recording"]["input_device_index"] = 0
+        default_cfg["Data"]["Recording"]["input_device_index"] = None
 
     else:
         raise OSError(
