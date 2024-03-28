@@ -60,11 +60,10 @@ jobs:
 
     - name: Run pytest unittests on ubuntu
       if: matrix.os == 'ubuntu-latest'
-    #   run: |
-    #     jackd -d dummy &
-    #     python -m pytest tests
       run: |
+        jackd -d dummy &
         python -m pytest tests
+
 
     - name: Run pytest unittests on macos and windows
       if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
