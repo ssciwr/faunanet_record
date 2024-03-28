@@ -3,7 +3,8 @@ from pathlib import Path
 import pyaudio
 from datetime import datetime
 import librosa
-import pytest 
+import pytest
+
 
 def test_audio_recorder_creation(folders, audio_recorder_fx):
     _, DATA, _, _, _ = folders
