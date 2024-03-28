@@ -132,7 +132,7 @@ class Recorder(RecorderBase):
 
         self.p = pyaudio.PyAudio()
 
-        self.chunk_size = int(self.sample_rate / 100)
+        self.chunk_size = 1024
 
         self.input_device_index = input_device_index
 
@@ -143,7 +143,7 @@ class Recorder(RecorderBase):
             input_device_index=input_device_index,
             input=True,
             start=False,
-            frames_per_buffer=int(self.sample_rate / 100),
+            frames_per_buffer=1024,
         )
 
     def start(self, stop_condition: callable = lambda x: False):
@@ -258,7 +258,7 @@ class Recorder(RecorderBase):
         if self.stream.is_stopped():
             raise RuntimeError("The input stream is stopped or closed. Has it been started at some point?")
 
-        chunk_size = int(self.sample_rate / 100)
+        chunk_size = 1024
 
         frames = b"".join(
             [
