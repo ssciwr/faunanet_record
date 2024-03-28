@@ -13,6 +13,11 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
+    num_devices = recorder.p.get_device_count()
+    for i in range(num_devices):
+        device_info = recorder.p.get_device_info_by_index(i)
+        print(f"Device {i}: {device_info['name']}")
+
     assert recorder.output == DATA
     assert recorder.length_in_s == 3
     assert recorder.sample_rate == 48000
