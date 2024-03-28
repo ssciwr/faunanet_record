@@ -13,6 +13,11 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
+    num_devices = recorder.p.get_device_count()
+    for i in range(num_devices):
+        device_info = recorder.p.get_device_info_by_index(i)
+        print(f"Device {i}: {device_info['name']}")
+
     assert recorder.output == DATA
     assert recorder.length_in_s == 3
     assert recorder.sample_rate == 48000
@@ -30,6 +35,10 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
     _, cfg = audio_recorder_fx
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+    num_devices = recorder.p.get_device_count()
+    for i in range(num_devices):
+        device_info = recorder.p.get_device_info_by_index(i)
+        print(f"Device {i}: {device_info['name']}")
     # make sure the data folder is empty before doing anything
     for file in Path(recorder.output).iterdir():
         file.unlink()
@@ -116,7 +125,10 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
     cfg["Data"]["Recording"]["mode"] = "stream"
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
-
+    num_devices = recorder.p.get_device_count()
+    for i in range(num_devices):
+        device_info = recorder.p.get_device_info_by_index(i)
+        print(f"Device {i}: {device_info['name']}")
     recorder.start()
 
     for i in range(0, 3, 1):
@@ -156,6 +168,10 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
         output_folder=Path.home() / "iSparrow_data",
         mode="stream",
     )
+    num_devices = recorder.p.get_device_count()
+    for i in range(num_devices):
+        device_info = recorder.p.get_device_info_by_index(i)
+        print(f"Device {i}: {device_info['name']}")
     with pytest.raises(RuntimeError) as exc_info:
         recorder.stream_audio()
 
