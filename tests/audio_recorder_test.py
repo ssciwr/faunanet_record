@@ -121,7 +121,7 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
 
     recorder.start()
 
-    for i in range(0, 3, 1):
+    for _ in range(0, 3, 1):
         length, _ = recorder.stream_audio()
 
         # get back bytes array -> take into account size of individual samples

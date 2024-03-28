@@ -135,19 +135,4 @@ def audio_recorder_fx():
     testpath = filepath.parent
     with open(testpath / Path("test_configs") / "cfg_default.yml", "r") as file:
         default_cfg = yaml.safe_load(file)
-
-    # assign device index based on os. Sadly necessary because not all have the same indexing scheme
-    if platform.system() == "Darwin":
-        default_cfg["Data"]["Recording"]["input_device_index"] = None
-    elif platform.system() == "Linux":
-        default_cfg["Data"]["Recording"][
-            "input_device_index"
-        ] = None  # not specific, use default
-    elif platform.system() == "Windows":
-        default_cfg["Data"]["Recording"]["input_device_index"] = None
-
-    else:
-        raise OSError(
-            "Unknown operating system, must be one of [Darwin(macos), Linux, Windows]"
-        )
     return testpath, default_cfg
