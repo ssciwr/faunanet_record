@@ -138,7 +138,7 @@ def audio_recorder_fx():
 
     # assign device index based on os. Sadly necessary because not all have the same indexing scheme
     if platform.system() == "Darwin":
-        default_cfg["Data"]["Recording"]["input_device_index"] = 1
+        default_cfg["Data"]["Recording"]["input_device_index"] = None
     elif platform.system() == "Linux":
         default_cfg["Data"]["Recording"][
             "input_device_index"

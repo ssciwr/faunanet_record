@@ -42,8 +42,10 @@ jobs:
 
     - name: Install audio dependencies on macos
       if: matrix.os == 'macos-latest'
-      run: brew install portaudio
-
+      run: | 
+        brew install portaudio 
+        brew install --cask soundflower 
+        
     - name: Install audio dependencies on windows 
       if: matrix.os == 'windows-latest'
       run: |
