@@ -185,7 +185,6 @@ class Recorder(RecorderBase):
 
                         wavfile.writeframes(frames)
         except Exception as e:
-            self._close()  # release resources of portaudio, then reraise
             raise e
 
     def stop(self):
