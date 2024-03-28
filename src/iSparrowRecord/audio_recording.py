@@ -156,7 +156,12 @@ class Recorder(RecorderBase):
         Raises:
             e: Generic exception if an error occurs during recording data or writing to file.
         """
+        if self.p is None:
+            self._close()
+            raise RuntimeError("No portaudio resources. This object cannot be used")
+
         if self.stream is None:
+            self._close()
             raise RuntimeError(
                 "No stream bound to this object when trying to start stream, has it been closed before? "
             )
@@ -185,12 +190,16 @@ class Recorder(RecorderBase):
 
                         wavfile.writeframes(frames)
         except Exception as e:
+            self._close()
             raise e
 
     def stop(self):
         """
         stop Stop the recording process, but keep resources around to restart later if desired.
         """
+        if self.p is None:
+            raise RuntimeError("No portaudio resources, this object cannot be used")
+
         if self.stream is None:
             raise RuntimeError(
                 "No stream bound to this object when trying to stop stream, has it been closed before? "
@@ -218,13 +227,14 @@ class Recorder(RecorderBase):
         close Close stream, stop recording and release resources. Stream cannot be restarted after this.
             This function exits mostly for debugging reasons, and there should be no need to call it explicitly in normal use cases.
         """
-        if self.stream is not None and self.stream.is_active():
+        if self.stream is not None and self.stream._is_running:
             self.stop()
             self.stream.close()
             self.stream = None
 
         if self.p is not None:
             self.p.terminate()
+            self.p = None
 
     def __del__(self):
         self._close()
@@ -236,13 +246,17 @@ class Recorder(RecorderBase):
         Returns:
             Tuple[int, bytes]: Tuple containing the number of bytes in the recorded chunk, and the recorded data as raw bytes buffer.
         """
+        if self.p is None:
+            self._close()
+            raise RuntimeError("No portaudio resources. This object cannot be used")
+
         if self.stream is None:
             raise RuntimeError(
-                "No stream bound to this object when calling 'stream_audio', has it been closed before? "
+                "No stream bound to this object when calling 'stream_audio', has it been closed before?"
             )
 
         if self.stream.is_stopped():
-            raise RuntimeError("The input stream is stopped or closed")
+            raise RuntimeError("The input stream is stopped or closed. Has it been started at some point?")
 
         chunk_size = int(self.sample_rate / 100)
 

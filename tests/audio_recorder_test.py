@@ -104,7 +104,7 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
 
     recorder._close()
 
-    assert len(recorder.p._streams) == 0
+    assert recorder.p is None
 
     assert recorder.stream is None
 
@@ -151,6 +151,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
 
     assert str(exc_info.value) == "Unknown mode. Must be 'record', 'stream'"
 
+    # not started
     recorder = ard.Recorder(
         output_folder=Path.home() / "iSparrow_data",
         mode="stream",
@@ -158,4 +159,31 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
     with pytest.raises(RuntimeError) as exc_info:
         recorder.stream_audio()
 
-    assert str(exc_info.value) == "The input stream is stopped or closed"
+    assert (
+        str(exc_info.value)
+        == "The input stream is stopped or closed. Has it been started at some point?"
+    )
+
+    recorder = ard.Recorder(
+        output_folder=Path.home() / "iSparrow_data",
+        mode="stream",
+    )
+    # None objects held where they are not allowed
+    recorder.p = None
+
+    with pytest.raises(RuntimeError) as exc_info:
+        recorder.stream_audio()
+
+    assert str(exc_info.value) == "No portaudio resources. This object cannot be used"
+
+    recorder = ard.Recorder(
+        output_folder=Path.home() / "iSparrow_data",
+        mode="stream",
+    )
+
+    recorder.stream = None
+
+    with pytest.raises(RuntimeError) as exc_info:
+        recorder.stream_audio()
+
+    assert str(exc_info.value) == "No stream bound to this object when calling 'stream_audio', has it been closed before?"
