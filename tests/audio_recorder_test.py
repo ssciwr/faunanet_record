@@ -120,7 +120,8 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
 
     recorder.start()
 
-    for _ in range(0, 3, 1):
+    for i in range(0, 3, 1):
+        print("current: ", i )
         length, _ = recorder.stream_audio()
 
         # get back bytes array -> take into account size of individual samples
@@ -129,6 +130,7 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
             * recorder.length_in_s
             * pyaudio.get_sample_size(recorder.num_format)
         )
+
 
 
 def test_audio_recorder_exceptions(audio_recorder_fx):

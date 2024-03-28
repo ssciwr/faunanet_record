@@ -245,7 +245,7 @@ class Recorder(RecorderBase):
         if self.stream.is_stopped():
             raise RuntimeError("The input stream is stopped or closed")
 
-        chunk_size = int(self.sample_rate / 1000)
+        chunk_size = int(self.sample_rate / 100)
 
         frames = b"".join(
             [
