@@ -34,12 +34,6 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
     for file in Path(recorder.output).iterdir():
         file.unlink()
 
-    print("Get audio devices")
-    num_devices = recorder.p.get_device_count()
-    for i in range(num_devices):
-        device_info = recorder.p.get_device_info_by_index(i)
-        print(f"Device {i}: {device_info['name']}")
-
     assert recorder.stream is not None
     assert recorder.p is not None
     assert recorder.stream.is_active() is False
