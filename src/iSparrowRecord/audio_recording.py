@@ -132,7 +132,7 @@ class Recorder(RecorderBase):
 
         self.p = pyaudio.PyAudio()
 
-        self.chunk_size = 1024
+        self.chunk_size = 1000
 
         self.input_device_index = input_device_index
 
@@ -143,7 +143,7 @@ class Recorder(RecorderBase):
             input_device_index=input_device_index,
             input=True,
             start=False,
-            frames_per_buffer=1024,
+            frames_per_buffer=self.chunk_size,
         )
 
     def start(self, stop_condition: callable = lambda x: False):
@@ -264,7 +264,7 @@ class Recorder(RecorderBase):
             [
                 self.stream.read(self.chunk_size)
                 for _ in range(
-                    0, int(self.sample_rate / self.chunk_size * self.length_in_s)
+                    0, int((self.sample_rate * self.length_in_s) / self.chunk_size)
                 )
             ]
         )

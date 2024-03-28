@@ -16,7 +16,7 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
     assert recorder.output == DATA
     assert recorder.length_in_s == 3
     assert recorder.sample_rate == 48000
-    assert recorder.chunk_size == 1024
+    assert recorder.chunk_size == 1000
     assert recorder.file_type == "wave"
     assert recorder.channels == 1
     assert recorder.num_format == pyaudio.paInt16
@@ -89,7 +89,6 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
     # length must be sample rate (48000) times length in seconds (3)
     assert len(data) == 48000 * 3
 
-
     # try stop, restart, close functions
     recorder.stop()
 
@@ -127,9 +126,7 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
 
         # get back bytes array -> take into account size of individual samples
         assert length == int(
-            recorder.sample_rate
-            / recorder.chunk_size
-            * recorder.length_in_s
+            (recorder.sample_rate * recorder.length_in_s)
             * pyaudio.get_sample_size(recorder.num_format)
         )
 
