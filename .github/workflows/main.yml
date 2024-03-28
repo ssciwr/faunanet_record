@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest ] # ubuntu-latest,  macos-latest, windows-latest]
+        os: [macos-latest ] # ubuntu-latest,  macos-latest, windows-latest]
         python-version: ["3.11"]
     steps:
       
@@ -29,11 +29,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install audio dependencies on ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: | 
-        sudo apt-get update
-        sudo apt-get install -y portaudio19-dev pulseaudio
+    # - name: Install audio dependencies on ubuntu
+    #   if: matrix.os == 'ubuntu-latest'
+    #   run: | 
+    #     sudo apt-get update
+    #     sudo apt-get install -y portaudio19-dev pulseaudio
 
     - name: Set up Homebrew on macos
       if: matrix.os == 'macos-latest'
@@ -59,17 +59,17 @@ jobs:
         python3 -m pip install .
         python3 -m pip install -r requirements-dev.txt
 
-    - name: Run pytest unittests on ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        # set up virtual audio device
-        pulseaudio -D
-        pactl load-module module-null-sink sink_name=virtspk sink_properties=device.description=Virtual_Speaker
-        pactl load-module module-null-sink sink_name=virtmic sink_properties=device.description=Virtual_Microphone_Sink
-        pactl load-module module-remap-source master=virtmic.monitor source_name=virtmic source_properties=device.description=Virtual_Microphone
+    # - name: Run pytest unittests on ubuntu
+    #   if: matrix.os == 'ubuntu-latest'
+    #   run: |
+    #     # set up virtual audio device
+    #     pulseaudio -D
+    #     pactl load-module module-null-sink sink_name=virtspk sink_properties=device.description=Virtual_Speaker
+    #     pactl load-module module-null-sink sink_name=virtmic sink_properties=device.description=Virtual_Microphone_Sink
+    #     pactl load-module module-remap-source master=virtmic.monitor source_name=virtmic source_properties=device.description=Virtual_Microphone
 
-        # test stuff
-        python3 -m pytest tests
+    #     # test stuff
+    #     python3 -m pytest tests
 
 
     - name: Run pytest unittests on macos and windows

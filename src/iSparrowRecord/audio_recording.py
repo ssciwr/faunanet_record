@@ -256,14 +256,16 @@ class Recorder(RecorderBase):
             )
 
         if self.stream.is_stopped():
-            raise RuntimeError("The input stream is stopped or closed. Has it been started at some point?")
-
-        chunk_size = 1024
+            raise RuntimeError(
+                "The input stream is stopped or closed. Has it been started at some point?"
+            )
 
         frames = b"".join(
             [
-                self.stream.read(chunk_size)
-                for _ in range(0, int(self.sample_rate / chunk_size * self.length_in_s))
+                self.stream.read(self.chunk_size)
+                for _ in range(
+                    0, int(self.sample_rate / self.chunk_size * self.length_in_s)
+                )
             ]
         )
 
