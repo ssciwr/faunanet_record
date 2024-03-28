@@ -158,6 +158,9 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
         mode="stream",
     )
 
+    with pytest.raises(RuntimeError) as exc_info:
+        recorder.stream_audio()
+
     assert (
         str(exc_info.value)
         == "The input stream is stopped or closed. Has it been started at some point?"
