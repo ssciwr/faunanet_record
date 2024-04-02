@@ -1,4 +1,4 @@
-from iSparrowRecord import audio_recording as ard
+from iSparrowRecord import Recorder
 from pathlib import Path
 import pyaudio
 from datetime import datetime
@@ -11,8 +11,7 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     _, cfg = audio_recorder_fx
 
-
-    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = Recorder.from_cfg(cfg["Data"]["Recording"])
 
     assert recorder.output == DATA
     assert recorder.length_in_s == 3
@@ -31,7 +30,7 @@ def test_audio_functionality_record_mode(audio_recorder_fx):
 
     _, cfg = audio_recorder_fx
 
-    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = Recorder.from_cfg(cfg["Data"]["Recording"])
 
     # make sure the data folder is empty before doing anything
     for file in Path(recorder.output).iterdir():
@@ -118,7 +117,7 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
 
     cfg["Data"]["Recording"]["mode"] = "stream"
 
-    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = Recorder.from_cfg(cfg["Data"]["Recording"])
 
     recorder.start()
 
@@ -136,7 +135,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
 
     # with 'record', output folder must be given
     with pytest.raises(ValueError) as exc_info:
-        ard.Recorder(output_folder=None, mode="record")
+        Recorder(output_folder=None, mode="record")
 
     assert (
         str(exc_info.value)
@@ -145,7 +144,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
 
     # unknown mode of operation gives exception
     with pytest.raises(ValueError) as exc_info:
-        ard.Recorder(
+        Recorder(
             output_folder=Path.home() / "iSparrow_data",
             mode="some_unknown_mode_with_typos_or_something",
         )
@@ -153,7 +152,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
     assert str(exc_info.value) == "Unknown mode. Must be 'record', 'stream'"
 
     # not started
-    recorder = ard.Recorder(
+    recorder = Recorder(
         output_folder=Path.home() / "iSparrow_data",
         mode="stream",
     )
@@ -166,7 +165,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
         == "The input stream is stopped or closed. Has it been started at some point?"
     )
 
-    recorder = ard.Recorder(
+    recorder = Recorder(
         output_folder=Path.home() / "iSparrow_data",
         mode="stream",
     )
@@ -178,7 +177,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
 
     assert str(exc_info.value) == "No portaudio resources. This object cannot be used"
 
-    recorder = ard.Recorder(
+    recorder = Recorder(
         output_folder=Path.home() / "iSparrow_data",
         mode="stream",
     )
