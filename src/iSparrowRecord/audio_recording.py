@@ -120,7 +120,7 @@ class Recorder(RecorderBase):
                     "Output folder for recording object cannot be None in 'record' mode"
                 )
 
-            self.filename_format = "%y%m%d_%H%M%S.wav"
+            self.filename_format = "%y%m%d_%H%M%S"
 
         super().__init__(
             output_folder=output_folder,
@@ -174,7 +174,7 @@ class Recorder(RecorderBase):
                 # while True:
                 while stop_condition(self) is False and self.stream.is_active():
 
-                    filename = datetime.now().strftime(self.filename_format)
+                    filename = datetime.now().strftime(self.filename_format) + ".wav"
                     print(filename)
                     _, frames = self.stream_audio()
 
