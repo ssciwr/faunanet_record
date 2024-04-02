@@ -12,7 +12,6 @@ CONFIG = None
 
 # README: the below will later land in setup.py...
 def read_yaml(path: str):
-    print(f"...reading config from {path}")
     """
         read_yaml Read the yaml basic config file for iSparrow from path.
                 It contains the install directory, data directory and other things used
@@ -65,7 +64,7 @@ def make_directories(base_cfg_dirs: dict):
     ish = Path(base_cfg_dirs["home"]).expanduser().resolve()
     isd = Path(base_cfg_dirs["data"]).expanduser().resolve()
     iso = Path(base_cfg_dirs["output"]).expanduser().resolve()
-    isc = Path(user_config_dir("iSparrow")).expanduser().resolve()
+    isc = Path(user_config_dir("iSparrowRecord")).expanduser().resolve()
     for p in [ish, isd, iso, isc]:
         p.mkdir(parents=True, exist_ok=True)
 
@@ -79,10 +78,13 @@ def set_up():
     # the base_cfg values whereever user does not have anything
 
     cfg_path = Path(__file__).resolve().parent / "config"
-    print(cfg_path)
-    cfg = read_yaml(cfg_path / Path("default.yml"))
+
+    print("using install config", cfg_path / Path("install.yml"))
+    cfg = read_yaml(cfg_path / Path("install.yml"))
 
     home, data, output, config = make_directories(cfg["Directories"])
+
+    shutil.copy(cfg_path / Path("install.yml"), config)
 
     shutil.copy(cfg_path / Path("default.yml"), config)
 
