@@ -11,7 +11,7 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     _, cfg = audio_recorder_fx
 
-    # get sound device info 
+    print("get sound device info") 
     p = pyaudio.PyAudio()
 
     num_devices = p.get_device_count()
@@ -35,6 +35,7 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
     assert recorder.stream.is_active() is False
     assert recorder.p is not None
     assert recorder.mode == "record"
+    assert 3 == 4
 
 
 def test_audio_functionality_record_mode(audio_recorder_fx):
