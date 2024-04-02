@@ -72,7 +72,7 @@ def make_directories(base_cfg_dirs: dict):
 
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def install(request):
     print("Creating iSparrow folders and downloading data... ")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
@@ -110,17 +110,17 @@ def install(request):
     request.addfinalizer(teardown)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def folders():
     global HOME, DATA, OUTPUT
     return str(HOME), str(DATA), str(OUTPUT)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def audio_recorder_fx():
     filepath = Path(__file__).resolve()
     testpath = filepath.parent
-    with open(testpath / Path("test_configs") / "cfg_default.yml", "r") as file:
+    with open(testpath / Path("test_configs") / "cfg_test.yml", "r") as file:
         default_cfg = yaml.safe_load(file)
 
     return testpath, default_cfg

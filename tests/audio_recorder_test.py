@@ -6,12 +6,12 @@ import librosa
 import pytest
 
 
-def test_audio_recorder_creation(folders, audio_recorder_fx):
+def test_audio_recorder_creation(folders, audio_recorder_fx,):
     _, DATA, _ = folders
 
     _, cfg = audio_recorder_fx
 
-    recorder = Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = Recorder.from_cfg(cfg["Data"])
 
     assert recorder.output == DATA
     assert recorder.length_in_s == 3
@@ -26,11 +26,11 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
     assert recorder.mode == "record"
 
 
-def test_audio_functionality_record_mode(audio_recorder_fx):
+def test_audio_functionality_record_mode(audio_recorder_fx,):
 
     _, cfg = audio_recorder_fx
 
-    recorder = Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = Recorder.from_cfg(cfg["Data"])
 
     # make sure the data folder is empty before doing anything
     for file in Path(recorder.output).iterdir():
@@ -117,7 +117,7 @@ def test_audio_functionality_stream_mode(audio_recorder_fx):
 
     cfg["Data"]["Recording"]["mode"] = "stream"
 
-    recorder = Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = Recorder.from_cfg(cfg["Data"])
 
     recorder.start()
 
