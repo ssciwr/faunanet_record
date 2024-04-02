@@ -1,0 +1,8 @@
+Output: 
+  runtime: 20
+  output_folder: ~/iSparrow_data
+Recording:
+  sample_rate: 32000
+  length_s: 10
+
+

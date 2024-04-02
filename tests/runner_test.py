@@ -88,5 +88,3 @@ def test_runner_usage(folders, audio_recorder_fx):
         num_file += 1
 
     assert num_file == 3
-
-

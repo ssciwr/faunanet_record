@@ -1,13 +1,9 @@
-Directories: 
-  home: ~/iSparrow 
-  data: &data_output ~/iSparrow_data
-  output: ~/iSparrow_output
-Data:
-  Output: 
-    folder: *data_output
-  Recording:
-    sample_rate: 48000
-    length_s: 3
-    channels: 1
-    mode: "record"
+Output: 
+  output_folder:  ~/iSparrow_data
+  runtime: 9 # for security: run with default should not run forever
+Recording:
+  sample_rate: 48000
+  length_s: 3
+  channels: 1
+  mode: "record"
 
