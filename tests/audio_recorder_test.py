@@ -22,20 +22,19 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     p.terminate()
 
-    # recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
-    # assert recorder.output == DATA
-    # assert recorder.length_in_s == 3
-    # assert recorder.sample_rate == 48000
-    # assert recorder.chunk_size == 1000
-    # assert recorder.file_type == "wave"
-    # assert recorder.channels == 1
-    # assert recorder.num_format == pyaudio.paInt16
-    # assert recorder.stream is not None
-    # assert recorder.stream.is_active() is False
-    # assert recorder.p is not None
-    # assert recorder.mode == "record"
-    assert 3 == 4
+    assert recorder.output == DATA
+    assert recorder.length_in_s == 3
+    assert recorder.sample_rate == 48000
+    assert recorder.chunk_size == 1000
+    assert recorder.file_type == "wave"
+    assert recorder.channels == 1
+    assert recorder.num_format == pyaudio.paInt16
+    assert recorder.stream is not None
+    assert recorder.stream.is_active() is False
+    assert recorder.p is not None
+    assert recorder.mode == "record"
 
 
 # def test_audio_functionality_record_mode(audio_recorder_fx):
