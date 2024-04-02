@@ -13,16 +13,16 @@ CONFIG = None
 # README: the below will later land in setup.py...
 def read_yaml(path: str):
     """
-        read_yaml Read the yaml basic config file for iSparrow from path.
-                It contains the install directory, data directory and other things used
-                by iSparrow internally.
+    read_yaml Read the yaml basic config file for iSparrow from path.
+            It contains the install directory, data directory and other things used
+            by iSparrow internally.
 
-        Args:
-            path (str): Path to the yaml base config.
+    Args:
+        path (str): Path to the yaml base config.
 
-        Returns:
-            dict: read base config file.
-        """
+    Returns:
+        dict: read base config file.
+    """
 
     if Path(path).exists() is False:
         raise FileNotFoundError(f"The folder {path} does not exist")
@@ -79,12 +79,14 @@ def set_up():
 
     cfg_path = Path(__file__).resolve().parent / "config"
 
-    print("using install config", cfg_path / Path("install.yml"))
-    cfg = read_yaml(cfg_path / Path("install.yml"))
+    install_cfg = "install.yml"
+
+    print("using install config", cfg_path / Path(install_cfg))
+    cfg = read_yaml(cfg_path / Path(install_cfg))
 
     home, data, output, config = make_directories(cfg["Directories"])
 
-    shutil.copy(cfg_path / Path("install.yml"), config)
+    shutil.copy(cfg_path / Path(install_cfg), config)
 
     shutil.copy(cfg_path / Path("default.yml"), config)
 
