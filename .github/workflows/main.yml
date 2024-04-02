@@ -85,5 +85,5 @@ jobs:
     - name: Run pytest unittests on windows
       if: matrix.os == 'windows-latest'
       run: |
-          net start audiosrv
+          net start audiosrv # start audio engine
           python3 -m pytest tests

@@ -132,7 +132,7 @@ class Recorder(RecorderBase):
 
         self.p = pyaudio.PyAudio()
 
-        self.chunk_size = 1000
+        self.chunk_size = 500
 
         self.input_device_index = input_device_index
 

@@ -24,7 +24,6 @@ Data:
     length_s: 3 
     channels: 1
     mode: "record"
-    input_device_index: 0
   Preprocessor: 
     sample_rate: 48000
     overlap: 0.0
