@@ -11,17 +11,6 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     _, cfg = audio_recorder_fx
 
-    print("get sound device info") 
-    p = pyaudio.PyAudio()
-
-    num_devices = p.get_device_count()
-
-    for i in range(num_devices):
-        device_info = p.get_device_info_by_index(i)
-        print(f"Device {i}: {device_info['name']}")
-
-    p.terminate()
-
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
     assert recorder.output == DATA
