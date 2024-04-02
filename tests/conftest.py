@@ -2,14 +2,11 @@ import pytest
 import shutil
 from pathlib import Path
 import yaml
-import platform
 import pyaudio
 
 HOME = None
 DATA = None
-MODELS = None
 OUTPUT = None
-EXAMPLES = None
 
 
 # README: the below will later land in setup.py...
@@ -56,11 +53,6 @@ def make_directories(base_cfg_dirs: dict):
     if "home" not in base_cfg_dirs:
         raise KeyError("The home folder for iSparrow must be given in the base config")
 
-    if "models" not in base_cfg_dirs:
-        raise KeyError(
-            "The models folder for iSparrow must be given in the base config"
-        )
-
     if "data" not in base_cfg_dirs:
         raise KeyError("The data folder for iSparrow must be given in the base config")
 
@@ -70,16 +62,13 @@ def make_directories(base_cfg_dirs: dict):
         )
 
     ish = Path(base_cfg_dirs["home"]).expanduser().resolve()
-    ism = Path(base_cfg_dirs["models"]).expanduser().resolve()
     isd = Path(base_cfg_dirs["data"]).expanduser().resolve()
     iso = Path(base_cfg_dirs["output"]).expanduser().resolve()
-    ise = (Path(base_cfg_dirs["home"]).expanduser() / Path("example")).resolve()
 
-    print(ish, ism, isd, iso, ise)
-    for p in [ish, ism, isd, iso, ise]:
+    for p in [ish, isd, iso]:
         p.mkdir(parents=True, exist_ok=True)
 
-    return ish, ism, isd, iso, ise
+    return ish, isd, iso
 
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
@@ -91,18 +80,16 @@ def install(request):
 
     cfg_path = Path(__file__).resolve().parent.parent / "config"
 
-    cfg = read_yaml(cfg_path / Path("install_cfg.yml"))
+    cfg = read_yaml(cfg_path / Path("default.yml"))
 
-    home, models, data, output, examples = make_directories(cfg["Directories"])
+    home, data, output = make_directories(cfg["Directories"])
 
-    shutil.copy(cfg_path / Path("install_cfg.yml"), home)
+    shutil.copy(cfg_path / Path("default.yml"), home)
 
-    global HOME, DATA, MODELS, OUTPUT, EXAMPLES
+    global HOME, DATA, OUTPUT
     HOME = home
     DATA = data
-    MODELS = models
     OUTPUT = output
-    EXAMPLES = examples
 
     print("Installation finished, check audio devices: ")
 
@@ -125,8 +112,8 @@ def install(request):
 
 @pytest.fixture(scope="session")
 def folders():
-    global HOME, DATA, MODELS, OUTPUT, EXAMPLES
-    return str(HOME), str(DATA), str(MODELS), str(OUTPUT), str(EXAMPLES)
+    global HOME, DATA, OUTPUT
+    return str(HOME), str(DATA), str(OUTPUT)
 
 
 @pytest.fixture
