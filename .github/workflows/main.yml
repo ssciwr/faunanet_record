@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ] #[macos-latest, ubuntu-latest,]
+        os: [ubuntu-latest,]
         python-version: ["3.11"]
     steps:
       
@@ -30,31 +30,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install audio dependencies on ubuntu
-      if: matrix.os == 'ubuntu-latest'
       run: | 
         sudo apt-get update
         sudo apt-get install -y portaudio19-dev pulseaudio
-
-    - name: Set up Homebrew on macos
-      if: matrix.os == 'macos-latest'
-      id: set-up-homebrew
-      uses: Homebrew/actions/setup-homebrew@master
-
-    - name: Install audio dependencies on macos
-      if: matrix.os == 'macos-latest'
-      run: | 
-        brew install portaudio 
-
-    - name: Set up audio device on windows 
-      if: matrix.os == 'windows-latest'
-      uses: LABSN/sound-ci-helpers@v1
-
-
-    - name: Install audio dependencies on windows 
-      if: matrix.os == 'windows-latest'
-      run: |
-        python3 -m pip install pyaudio
-
 
     - name: Getting repository
       uses: actions/checkout@v3
@@ -75,15 +53,3 @@ jobs:
 
         # test stuff
         python3 -m pytest tests
-
-
-    - name: Run pytest unittests on macos
-      if: matrix.os == 'macos-latest'
-      run: |
-        python3 -m pytest tests
-
-    - name: Run pytest unittests on windows
-      if: matrix.os == 'windows-latest'
-      run: |
-          net start audiosrv # start audio engine
-          python3 -m pytest tests

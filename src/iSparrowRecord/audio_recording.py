@@ -25,7 +25,7 @@ class RecorderBase(ABC):
         file_type: str = "wave",
         channels: int = 1,
         mode: str = "record",
-        num_format=None,
+        num_format: int = None,
     ):
         """
         __init__ Create a new instance. This class should not be instantiated on its own, but only as part of a child class.
@@ -92,6 +92,7 @@ class Recorder(RecorderBase):
         channels: int = 1,
         mode: str = "record",
         input_device_index: int = None,
+        chunk_size: int = 1000,
     ):
         """
         __init__ Create a new instance.
@@ -103,14 +104,14 @@ class Recorder(RecorderBase):
             channels (int, optional): Number of channels used for recording. Possible number depends on recording hardware. Defaults to 1.
             mode (str, optional): Operational mode. Can either be 'record' (write data to file) or 'stream' (don't write data to file and return recorded data upon request). Defaults to "record".
             input_device_index (int, optional): Pyaudio device index that identifies the device to be used for recording. If 'None', default device is used. Defaults to None.
-
+            chunk_size (int, optional): The pyaudio chunk size requested from the device as number of requested samples.
         Raises:
             ValueError: _description_
         """
         self.stream = None
         self.p = None
         self.input_device_index = None
-
+        self.chunk_size = chunk_size
         if mode == "record":
 
             if output_folder is None:
@@ -131,8 +132,6 @@ class Recorder(RecorderBase):
         )
 
         self.p = pyaudio.PyAudio()
-
-        self.chunk_size = 500
 
         self.input_device_index = input_device_index
 

@@ -11,16 +11,6 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
 
     _, cfg = audio_recorder_fx
 
-    print("get sound device info") 
-    p = pyaudio.PyAudio()
-
-    num_devices = p.get_device_count()
-
-    for i in range(num_devices):
-        device_info = p.get_device_info_by_index(i)
-        print(f"Device {i}: {device_info['name']}")
-
-    p.terminate()
 
     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
@@ -37,168 +27,168 @@ def test_audio_recorder_creation(folders, audio_recorder_fx):
     assert recorder.mode == "record"
 
 
-# def test_audio_functionality_record_mode(audio_recorder_fx):
+def test_audio_functionality_record_mode(audio_recorder_fx):
 
-#     _, cfg = audio_recorder_fx
+    _, cfg = audio_recorder_fx
 
-#     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
+    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
-#     # make sure the data folder is empty before doing anything
-#     for file in Path(recorder.output).iterdir():
-#         file.unlink()
+    # make sure the data folder is empty before doing anything
+    for file in Path(recorder.output).iterdir():
+        file.unlink()
 
-#     assert recorder.stream is not None
-#     assert recorder.p is not None
-#     assert recorder.stream.is_active() is False
+    assert recorder.stream is not None
+    assert recorder.p is not None
+    assert recorder.stream.is_active() is False
 
-#     # support for stop condition is included in recorder
-#     class Condition:
+    # support for stop condition is included in recorder
+    class Condition:
 
-#         def __init__(self):
-#             self.x = 2
+        def __init__(self):
+            self.x = 2
 
-#         def __call__(self, _):
+        def __call__(self, _):
 
-#             cond = self.x <= 0
+            cond = self.x <= 0
 
-#             self.x -= 1
+            self.x -= 1
 
-#             return cond
+            return cond
 
-#     recorder.start(stop_condition=Condition())
+    recorder.start(stop_condition=Condition())
 
-#     assert recorder.stream is not None
+    assert recorder.stream is not None
 
-#     assert recorder.stream.is_active() is True
+    assert recorder.stream.is_active() is True
 
-#     assert len(list(Path(recorder.output).iterdir())) == 2
+    assert len(list(Path(recorder.output).iterdir())) == 2
 
-#     current = datetime.now().strftime("%y%m%d")
+    current = datetime.now().strftime("%y%m%d")
 
-#     files = list(Path(recorder.output).iterdir())
+    files = list(Path(recorder.output).iterdir())
 
-#     assert len(files) == 2
+    assert len(files) == 2
 
-#     for audiofile in files:
-#         yearmonthday = str(audiofile.name).split("_")[0]
+    for audiofile in files:
+        yearmonthday = str(audiofile.name).split("_")[0]
 
-#         assert yearmonthday == current
-#         assert audiofile.suffix == ".wav"
+        assert yearmonthday == current
+        assert audiofile.suffix == ".wav"
 
-#     # read in file to test length, samplerate, num_samples
+    # read in file to test length, samplerate, num_samples
 
-#     data, rate = librosa.load(
-#         Path(recorder.output) / files[0], sr=48000, res_type="kaiser_fast"
-#     )
+    data, rate = librosa.load(
+        Path(recorder.output) / files[0], sr=48000, res_type="kaiser_fast"
+    )
 
-#     duration = librosa.get_duration(y=data, sr=rate)
+    duration = librosa.get_duration(y=data, sr=rate)
 
-#     assert rate == 48000
+    assert rate == 48000
 
-#     assert duration == 3
+    assert duration == 3
 
-#     # length must be sample rate (48000) times length in seconds (3)
-#     assert len(data) == 48000 * 3
+    # length must be sample rate (48000) times length in seconds (3)
+    assert len(data) == 48000 * 3
 
-#     # try stop, restart, close functions
-#     recorder.stop()
+    # try stop, restart, close functions
+    recorder.stop()
 
-#     # use some internal variables to get handle on state
-#     assert recorder.is_running is False
+    # use some internal variables to get handle on state
+    assert recorder.is_running is False
 
-#     # start again
-#     recorder.start(stop_condition=Condition())
+    # start again
+    recorder.start(stop_condition=Condition())
 
-#     assert recorder.is_running is True
+    assert recorder.is_running is True
 
-#     files = list(Path(recorder.output).iterdir())
+    files = list(Path(recorder.output).iterdir())
 
-#     assert len(files) == 4
+    assert len(files) == 4
 
-#     recorder._close()
+    recorder._close()
 
-#     assert recorder.p is None
+    assert recorder.p is None
 
-#     assert recorder.stream is None
-
-
-# def test_audio_functionality_stream_mode(audio_recorder_fx):
-
-#     _, cfg = audio_recorder_fx
-
-#     cfg["Data"]["Recording"]["mode"] = "stream"
-
-#     recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
-
-#     recorder.start()
-
-#     for _ in range(0, 3, 1):
-#         length, _ = recorder.stream_audio()
-
-#         # get back bytes array -> take into account size of individual samples
-#         assert length == int(
-#             (recorder.sample_rate * recorder.length_in_s)
-#             * pyaudio.get_sample_size(recorder.num_format)
-#         )
+    assert recorder.stream is None
 
 
-# def test_audio_recorder_exceptions(audio_recorder_fx):
+def test_audio_functionality_stream_mode(audio_recorder_fx):
 
-#     # with 'record', output folder must be given
-#     with pytest.raises(ValueError) as exc_info:
-#         ard.Recorder(output_folder=None, mode="record")
+    _, cfg = audio_recorder_fx
 
-#     assert (
-#         str(exc_info.value)
-#         == "Output folder for recording object cannot be None in 'record' mode"
-#     )
+    cfg["Data"]["Recording"]["mode"] = "stream"
 
-#     # unknown mode of operation gives exception
-#     with pytest.raises(ValueError) as exc_info:
-#         ard.Recorder(
-#             output_folder=Path.home() / "iSparrow_data",
-#             mode="some_unknown_mode_with_typos_or_something",
-#         )
+    recorder = ard.Recorder.from_cfg(cfg["Data"]["Recording"])
 
-#     assert str(exc_info.value) == "Unknown mode. Must be 'record', 'stream'"
+    recorder.start()
 
-#     # not started
-#     recorder = ard.Recorder(
-#         output_folder=Path.home() / "iSparrow_data",
-#         mode="stream",
-#     )
+    for _ in range(0, 3, 1):
+        length, _ = recorder.stream_audio()
 
-#     with pytest.raises(RuntimeError) as exc_info:
-#         recorder.stream_audio()
+        # get back bytes array -> take into account size of individual samples
+        assert length == int(
+            (recorder.sample_rate * recorder.length_in_s)
+            * pyaudio.get_sample_size(recorder.num_format)
+        )
 
-#     assert (
-#         str(exc_info.value)
-#         == "The input stream is stopped or closed. Has it been started at some point?"
-#     )
 
-#     recorder = ard.Recorder(
-#         output_folder=Path.home() / "iSparrow_data",
-#         mode="stream",
-#     )
-#     # None objects held where they are not allowed
-#     recorder.p = None
+def test_audio_recorder_exceptions(audio_recorder_fx):
 
-#     with pytest.raises(RuntimeError) as exc_info:
-#         recorder.stream_audio()
+    # with 'record', output folder must be given
+    with pytest.raises(ValueError) as exc_info:
+        ard.Recorder(output_folder=None, mode="record")
 
-#     assert str(exc_info.value) == "No portaudio resources. This object cannot be used"
+    assert (
+        str(exc_info.value)
+        == "Output folder for recording object cannot be None in 'record' mode"
+    )
 
-#     recorder = ard.Recorder(
-#         output_folder=Path.home() / "iSparrow_data",
-#         mode="stream",
-#     )
+    # unknown mode of operation gives exception
+    with pytest.raises(ValueError) as exc_info:
+        ard.Recorder(
+            output_folder=Path.home() / "iSparrow_data",
+            mode="some_unknown_mode_with_typos_or_something",
+        )
 
-#     recorder.stream = None
+    assert str(exc_info.value) == "Unknown mode. Must be 'record', 'stream'"
 
-#     with pytest.raises(RuntimeError) as exc_info:
-#         recorder.stream_audio()
+    # not started
+    recorder = ard.Recorder(
+        output_folder=Path.home() / "iSparrow_data",
+        mode="stream",
+    )
 
-#     assert (
-#         str(exc_info.value)
-#         == "No stream bound to this object when calling 'stream_audio', has it been closed before?"
-#     )
+    with pytest.raises(RuntimeError) as exc_info:
+        recorder.stream_audio()
+
+    assert (
+        str(exc_info.value)
+        == "The input stream is stopped or closed. Has it been started at some point?"
+    )
+
+    recorder = ard.Recorder(
+        output_folder=Path.home() / "iSparrow_data",
+        mode="stream",
+    )
+    # None objects held where they are not allowed
+    recorder.p = None
+
+    with pytest.raises(RuntimeError) as exc_info:
+        recorder.stream_audio()
+
+    assert str(exc_info.value) == "No portaudio resources. This object cannot be used"
+
+    recorder = ard.Recorder(
+        output_folder=Path.home() / "iSparrow_data",
+        mode="stream",
+    )
+
+    recorder.stream = None
+
+    with pytest.raises(RuntimeError) as exc_info:
+        recorder.stream_audio()
+
+    assert (
+        str(exc_info.value)
+        == "No stream bound to this object when calling 'stream_audio', has it been closed before?"
+    )

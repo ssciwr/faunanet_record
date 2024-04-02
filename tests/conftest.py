@@ -136,6 +136,4 @@ def audio_recorder_fx():
     with open(testpath / Path("test_configs") / "cfg_default.yml", "r") as file:
         default_cfg = yaml.safe_load(file)
 
-    if platform.system() == "Windows":
-        default_cfg["Data"]["Recording"]["input_device_index"] = 4
     return testpath, default_cfg
