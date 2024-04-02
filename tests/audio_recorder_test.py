@@ -6,8 +6,11 @@ import librosa
 import pytest
 
 
-def test_audio_recorder_creation(folders, audio_recorder_fx,):
-    _, DATA, _ = folders
+def test_audio_recorder_creation(
+    folders,
+    audio_recorder_fx,
+):
+    _, DATA, _, _ = folders
 
     _, cfg = audio_recorder_fx
 
@@ -26,7 +29,11 @@ def test_audio_recorder_creation(folders, audio_recorder_fx,):
     assert recorder.mode == "record"
 
 
-def test_audio_functionality_record_mode(audio_recorder_fx,):
+def test_audio_functionality_record_mode(
+    folders,
+    audio_recorder_fx,
+):
+    _, DATA, _, _ = folders
 
     _, cfg = audio_recorder_fx
 
@@ -65,7 +72,7 @@ def test_audio_functionality_record_mode(audio_recorder_fx,):
     current = datetime.now().strftime("%y%m%d")
 
     files = list(Path(recorder.output).iterdir())
-
+    print(files)
     assert len(files) == 2
 
     for audiofile in files:
@@ -75,10 +82,9 @@ def test_audio_functionality_record_mode(audio_recorder_fx,):
         assert audiofile.suffix == ".wav"
 
     # read in file to test length, samplerate, num_samples
+    print("problem path: ", str(Path(recorder.output) / files[0]))
 
-    data, rate = librosa.load(
-        Path(recorder.output) / files[0], sr=48000, res_type="kaiser_fast"
-    )
+    data, rate = librosa.load(Path(DATA) / files[0], sr=48000, res_type="kaiser_fast")
 
     duration = librosa.get_duration(y=data, sr=rate)
 

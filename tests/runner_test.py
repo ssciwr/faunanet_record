@@ -7,7 +7,7 @@ from copy import deepcopy
 
 
 def test_runner_creation(folders, audio_recorder_fx):
-    _, DATA, _ = folders
+    _, DATA, _, _ = folders
 
     _, cfg = audio_recorder_fx
 
@@ -73,7 +73,7 @@ def test_runner_creation(folders, audio_recorder_fx):
 
 
 def test_runner_usage(folders, audio_recorder_fx):
-    _, DATA, _ = folders
+    _, DATA, _, _ = folders
 
     _, cfg = audio_recorder_fx
 
