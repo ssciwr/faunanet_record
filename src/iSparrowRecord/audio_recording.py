@@ -81,7 +81,8 @@ class Recorder(RecorderBase):
     start(stop_condition = lambda x: False): Make the caller start generate data. Runs until 'stop_condition(self)' returns True.
     stream_audio(): Get a chunk of recorded data corresponding to 'length_in_s' seconds of recording.
     stop(): Stop recorder and release held resources of PyAudio.
-
+    from_cfg(cfg) (classmethod): Build a new instance of this class from a dictionary, usually obtained by reading a yaml config
+    is_running(): check if the pyaudio stream held by the caller is still active.
     """
 
     def __init__(
@@ -174,7 +175,7 @@ class Recorder(RecorderBase):
                 while stop_condition(self) is False and self.stream.is_active():
 
                     filename = datetime.now().strftime(self.filename_format)
-
+                    print(filename)
                     _, frames = self.stream_audio()
 
                     with wave.open(
@@ -284,12 +285,10 @@ class Recorder(RecorderBase):
         Returns:
            Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
         """
-
-        if "output_folder" not in cfg:
+        print(cfg.keys())
+        if "output_folder" not in cfg["Output"]:
             raise ValueError("Output folder must be given in config node for recorder.")
 
-        folder = Path(cfg["output_folder"]).expanduser()
+        folder = Path(cfg["Output"]["output_folder"]).expanduser()
 
-        cfg["output_folder"] = folder
-
-        return cls(**cfg)
+        return cls(folder, **cfg["Recording"])
