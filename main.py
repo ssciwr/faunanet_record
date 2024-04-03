@@ -3,9 +3,11 @@ from platformdirs import user_config_dir
 from pathlib import Path
 import argparse
 from datetime import datetime
-from iSparrowRecord import Recorder
 from set_up_fake_sparrow import set_up
 import warnings
+import time 
+
+from iSparrowRecord import Recorder
 
 parser = argparse.ArgumentParser(description="iSparrowRecord CLI")
 
@@ -93,7 +95,22 @@ def _process_configs():
 
     return config 
 
-def _process_runtime(config: dict); 
+
+def _process_runtime(config: dict):
+    """
+    _process_runtime _summary_
+
+    _extended_summary_
+
+    Args:
+        config (dict): _description_
+
+    Raises:
+        ValueError: _description_
+
+    Returns:
+        _type_: _description_
+    """
     run_until = config["Output"]["run_until"] if "run_until" in config["Output"] else None
 
     runtime = config["Output"]["runtime"] if "runtime" in config["Output"] else None
@@ -103,16 +120,18 @@ def _process_runtime(config: dict);
             "Warning, both 'runtime' and 'run_until' set. 'run_until' will be ignored"
         )
         run_until = None
-        end_time = runtime
+        return runtime
+    elif run_until is None and runtime is None: 
+        raise ValueError("'run_until' and 'runtime' must not both be None.")
+        return None
     elif run_until is not None:
         run_until = datetime.strptime(run_until, "%Y-%m-%d_%H:%M:%S")
-        end_time = run_until
+        return run_until
     elif runtime is not None:
-        end_time = runtime
+        return runtime
     else:
-        end_time = None
+        return None
 
-    return end_time 
 
 def main():
     """
@@ -139,12 +158,12 @@ def main():
         # run forever
         recorder.start(lambda x: False)
 
-    if runtime is not None:
+    if isinstance(end_time, int):
         begin_time = time.time()
         # run until time passed
         recorder.start(lambda x: time.time() > begin_time + end_time)
 
-    if run_until is not None:
+    if isinstance(end_time, datetime):
         # run until date is reached
         recorder.start(lambda x: datetime.now() > end_time)
 
