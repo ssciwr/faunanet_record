@@ -51,12 +51,17 @@ class Runner:
         else:
             pass  # not found and no dictionaries - pass
 
-    def _process_configs(self, custom_filepath: str) -> dict:
+    def _process_configs(self, custom_cfg: dict) -> dict:
         """
-        _process_configs Updates the default config and merges with relevant parts of the install config to have the full parameter set data is collected with available.
+        _process_configs _summary_
+
+        _extended_summary_
+
+        Args:
+            custom_cfg (dict): _description_
 
         Returns:
-            dict: Full configuration for the runner.
+            dict: _description_
         """
 
         # get config files, then run. Their existence is guaranteed by the install
@@ -72,22 +77,10 @@ class Runner:
         with open(default_filepath, "r") as cfgfile:
             default_cfg = yaml.safe_load(cfgfile)
 
-        custom_filepath = Path(custom_filepath).expanduser()
-        with open(custom_filepath, "r") as cfgfile:
-            custom_cfg = yaml.safe_load(cfgfile)
-
         self._update_dict_recursive(default_cfg, custom_cfg)
 
         # dump complete config
         default_cfg["Install"] = sparrow_config
-
-        time = datetime.now().strftime("%y%m%d_%H%M%S")
-        with open(
-            Path(Path(sparrow_config["Directories"]["data"]).expanduser())
-            / f"config_{time}.yml",
-            "w",
-        ) as outfile:
-            yaml.safe_dump(default_cfg, outfile)
 
         return default_cfg
 
@@ -128,20 +121,28 @@ class Runner:
         else:
             return runtime
 
-    def __init__(self, custom_configpath: str = ""):
+    def __init__(self, custom_config: dict = {}):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
                  Merges the updated config with the installation info and dumps everything to the same folder where
                  the data is recorded to.
         Args:
-            custom_configpath (str, optional): Path to a custom configuration path. Defaults to "".
+            custom_config (dict, optional): A custom configuration dictionary containing key-value pairs that correspond to arguments used by this class or by the Recorder. Defaults to {}.
         """
 
-        self.config = self._process_configs(custom_configpath)
+        self.config = self._process_configs(custom_config)
 
         self.end_time = self._process_runtime(self.config["Output"])
 
         output = str(Path(self.config["Output"]["output_folder"]).expanduser())
+
+        # dump the config alongside the data
+        time = datetime.now().strftime("%y%m%d_%H%M%S")
+        with open(
+            Path(Path(output).expanduser()) / f"config_{time}.yml",
+            "w",
+        ) as outfile:
+            yaml.safe_dump(self.config, outfile)
 
         # create recorder, then start
         self.recorder = Recorder(
