@@ -45,7 +45,7 @@ class RecorderBase(ABC):
         """
         self.length_in_s = length_s
         self.sample_rate = sample_rate
-        self.output_folder = output_folder
+        self.output_folder = str(Path(output_folder).expanduser())
         self.file_type = file_type
         self.channels = channels
         self.num_format = num_format
