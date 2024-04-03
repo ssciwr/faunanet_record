@@ -1,0 +1,12 @@
+Data:
+  Output: 
+    output_folder: ~/iSparrow_data
+    run_until: 2024-04-02_14:35:01 #yyyy-mm-dd_hh:MM:ss, format string: "%Y-%m-%d_%H:%M:%S"
+    runtime: 9  # in seconds
+    
+  Recording:
+    sample_rate: 48000
+    length_s: 3
+    channels: 1
+    mode: "record"
+
