@@ -1,9 +1,11 @@
 import click
 import iSparrowRecord.set_up_sparrow as sus
-from iSparrowRecord import Runner
 from iSparrowRecord.utils import read_yaml
+from iSparrowRecord.runner import Runner
+
 from datetime import datetime
 from pathlib import Path
+import warnings
 
 
 @click.group()
@@ -20,10 +22,15 @@ def cli():
 )
 @click.option(
     "--standalone",
+    is_flag=True,
     help="Whether the package runs in standalone mode or as part of iSparrow",
-    default=True,
+    default=False,
 )
-def run(cfg: str, suffix: str, standalone: bool):
+@click.option("--debug", help="Enable debug output", is_flag=True)
+def run(cfg: str, suffix: str, standalone: bool, debug: bool):
+
+    if debug:
+        warnings.Warn("Debug output currently not implemented")
 
     if standalone:
         # test if the setup has been done already and if not do again
@@ -31,8 +38,10 @@ def run(cfg: str, suffix: str, standalone: bool):
         dump_config = True
 
     custom_cfg = {"Output": {"output_folder": sus.SPARROW_RECORD_DATA}}
+
     if cfg != "":
         custom_filepath = Path(cfg).expanduser()
+        print("Using custom config: ", custom_filepath)
         custom_cfg = read_yaml(custom_filepath)
 
     foldername = datetime.now().strftime("%y%m%d_%H%M%S") + "_" + suffix
@@ -44,6 +53,7 @@ def run(cfg: str, suffix: str, standalone: bool):
 
     runner = Runner(custom_cfg, dump_config=dump_config)
 
+    # FIXME: make this into something that runs in the background
     runner.run()
 
 
