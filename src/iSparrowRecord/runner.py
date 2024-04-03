@@ -3,13 +3,17 @@ from pathlib import Path
 from platformdirs import user_config_dir
 from datetime import datetime
 import warnings
-from iSparrowRecord import Recorder
+from . import Recorder
 import time
 
 
 class Runner:
+    """
+    _summary_
 
-    def update_dict_recursive(self, base, update):
+    """
+
+    def _update_dict_recursive(self, base, update):
         """
         _update_dict_recursive Merge recursively two arbitrarily nested dictionaries such that only those leaves of 'base' are upated with the content of 'update'
         for which the given path in 'update' fully exists in 'base'.
@@ -28,20 +32,18 @@ class Runner:
                     # overlapping element branch found
                     if isinstance(vb, dict) and isinstance(update[kb], dict):
                         # follow branch if possible
-                        self.update_dict_recursive(vb, update[kb])
+                        self._update_dict_recursive(vb, update[kb])
                     else:
                         # assign if not
                         base[kb] = update[kb]
                 else:
-                    self.update_dict_recursive(vb, update)  # find entrypoint
+                    self._update_dict_recursive(vb, update)  # find entrypoint
         else:
             pass  # not found and no dictionaries - pass
 
-    def process_configs(self, custom_filepath: str):
+    def _process_configs(self, custom_filepath: str):
         """
         _process_configs _summary_
-
-        _extended_summary_
 
         Returns:
             _type_: _description_
@@ -49,7 +51,7 @@ class Runner:
 
         # get config files, then run. Their existence is guaranteed by the install
         default_filepath = Path(user_config_dir("iSparrowRecord")) / "default.yml"
-        
+
         install_filepath = Path(user_config_dir("iSparrowRecord")) / "install.yml"
 
         # get install config for paths
@@ -64,7 +66,7 @@ class Runner:
         with open(custom_filepath, "r") as cfgfile:
             custom_cfg = yaml.safe_load(cfgfile)
 
-        self.update_dict_recursive(default_cfg, custom_cfg)
+        self._update_dict_recursive(default_cfg, custom_cfg)
 
         # dump complete config
         default_cfg["Install"] = sparrow_config
@@ -79,11 +81,9 @@ class Runner:
 
         return default_cfg
 
-    def process_runtime(self, config: dict):
+    def _process_runtime(self, config: dict):
         """
         _process_runtime _summary_
-
-        _extended_summary_
 
         Args:
             config (dict): _description_
@@ -129,9 +129,9 @@ class Runner:
             custom_configpath (str): _description_
         """
 
-        self.config = self.process_configs(custom_configpath)
+        self.config = self._process_configs(custom_configpath)
 
-        self.end_time = self.process_runtime(self.config)
+        self.end_time = self._process_runtime(self.config)
 
         output = str(Path(self.config["Output"]["output_folder"]).expanduser())
 
@@ -139,6 +139,10 @@ class Runner:
         self.recorder = Recorder(
             output_folder=str(Path(output).expanduser()), **self.config["Recording"]
         )
+
+    @property
+    def output(self):
+        return self.recorder.output_folder
 
     def run(self):
         """
@@ -159,7 +163,3 @@ class Runner:
         if isinstance(self.end_time, datetime):
             # run until date is reached
             self.recorder.start(lambda x: datetime.now() > self.end_time)
-
-    @classmethod
-    def from_cfg(cls, cfg_node: dict):
-        pass

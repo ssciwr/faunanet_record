@@ -41,8 +41,11 @@ def install(request):
 
 @pytest.fixture(scope="module")
 def folders():
+    custom_cfgdir = (
+        Path(__file__).resolve().parent.parent / Path("config") / "custom_example.yml"
+    )
     global HOME, DATA, OUTPUT, CONFIG
-    return str(HOME), str(DATA), str(OUTPUT), str(CONFIG)
+    return str(HOME), str(DATA), str(OUTPUT), str(CONFIG), str(custom_cfgdir)
 
 
 @pytest.fixture(scope="module")

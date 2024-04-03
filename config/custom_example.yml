@@ -1,7 +1,5 @@
-Output: 
-  runtime: 20
+Output:
+  runtime: 8
 Recording:
   sample_rate: 32000
-  length_s: 10
-
-
+  length_s: 4
