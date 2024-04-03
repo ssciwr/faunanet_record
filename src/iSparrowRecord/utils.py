@@ -21,12 +21,12 @@ def update_dict_recursive(base, update):
                 # overlapping element branch found
                 if isinstance(vb, dict) and isinstance(update[kb], dict):
                     # follow branch if possible
-                    self._update_dict_recursive(vb, update[kb])
+                    update_dict_recursive(vb, update[kb])
                 else:
                     # assign if not
                     base[kb] = update[kb]
             else:
-                self._update_dict_recursive(vb, update)  # find entrypoint
+                update_dict_recursive(vb, update)  # find entrypoint
     else:
         pass  # not found and no dictionaries - pass
 
