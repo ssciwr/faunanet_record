@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).parent))
 import pytest
 import shutil
 import yaml
-import set_up_fake_sparrow as spf
+import set_up_sparrow as spf
 
 HOME = None
 DATA = None
