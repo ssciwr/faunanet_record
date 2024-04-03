@@ -9,8 +9,18 @@ import time
 
 class Runner:
     """
-    _summary_
+    Class that runs data collection.
 
+    Attributes:
+    -----------
+    config (dict): Configuration parameters for data collection
+    end_time (int or datetime): Limit for how long or until when to collect data
+    recorder (iSparroRecord.Recorder): Recorder to collect data. See iSparrow.Recorder documentation
+
+    Methods:
+    --------
+    output Get the output data folder
+    run Run data collection
     """
 
     def _update_dict_recursive(self, base, update):
@@ -91,10 +101,15 @@ class Runner:
         Returns:
             int or datetime or None: If 'runtime' is given: the number of seconds to collect data. If 'run_until' is given: the timestamp (accurate to the second) until which data shall be collected. If none of both is given: None, meaning data collection runs indefinitely
         """
+        if "run_until" in config:
+            run_until = config["run_until"]
+        else:
+            run_until = None
 
-        run_until = config["run_until"] if "run_until" in config else None
-
-        runtime = config["runtime"] if "runtime" in config else None
+        if "runtime" in config:
+            runtime = config["runtime"]
+        else:
+            runtime = None
 
         if run_until is not None and runtime is not None:
             warnings.warn(
