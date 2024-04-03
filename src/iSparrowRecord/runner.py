@@ -121,11 +121,11 @@ class Runner:
         elif run_until is None and runtime is None:
             return None
 
-        elif run_until is not None:
+        elif run_until is not None and runtime is None: 
             run_until = datetime.strptime(run_until, "%Y-%m-%d_%H:%M:%S")
             return run_until
 
-        elif runtime is not None:
+        else:
             return runtime
 
     def __init__(self, custom_configpath: str = ""):

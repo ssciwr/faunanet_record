@@ -137,6 +137,9 @@ def test_condition_creation(install, folders):
 
     assert end_time == datetime.strptime("2024-04-04_12:05:24", "%Y-%m-%d_%H:%M:%S")
 
+    del cfg["Output"]["run_until"]
+    end_time = runner._process_runtime(cfg["Output"])
+    assert end_time is None 
 
 def test_runner_creation(install, folders):
     _, _, _, _, cfgdir = folders
