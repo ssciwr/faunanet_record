@@ -121,7 +121,7 @@ class Runner:
         elif run_until is None and runtime is None:
             return None
 
-        elif run_until is not None and runtime is None: 
+        elif run_until is not None and runtime is None:
             run_until = datetime.strptime(run_until, "%Y-%m-%d_%H:%M:%S")
             return run_until
 

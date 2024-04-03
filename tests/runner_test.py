@@ -1,4 +1,3 @@
-# from ..main import main
 from iSparrowRecord import Runner
 
 from pathlib import Path
