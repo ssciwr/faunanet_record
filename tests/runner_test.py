@@ -117,7 +117,7 @@ def test_condition_creation(install, folders):
 
     cfg = runner._process_configs(cfgdir / "custom_example.yml")
 
-    end_time = runner._process_runtime(cfg)
+    end_time = runner._process_runtime(cfg["Output"])
 
     assert end_time == 8
 
@@ -125,7 +125,7 @@ def test_condition_creation(install, folders):
     cfg["Output"]["run_until"] = "2024-04-04_12:05:24"
 
     with pytest.warns(UserWarning) as warning_info:
-        end_time = runner._process_runtime(cfg)
+        end_time = runner._process_runtime(cfg["Output"])
 
     assert (
         str(warning_info[0].message)
@@ -135,19 +135,9 @@ def test_condition_creation(install, folders):
     assert end_time == 8
 
     del cfg["Output"]["runtime"]
-    end_time = runner._process_runtime(cfg)
+    end_time = runner._process_runtime(cfg["Output"])
 
     assert end_time == datetime.strptime("2024-04-04_12:05:24", "%Y-%m-%d_%H:%M:%S")
-
-    del cfg["Output"]["run_until"]
-
-    with pytest.raises(ValueError) as exc_info:
-        end_time == runner._process_runtime(cfg)
-
-    assert (
-        str(exc_info.value)
-        == "'run_until' or 'runtime' must be given in 'Output' node of config."
-    )
 
 
 def test_runner_creation():

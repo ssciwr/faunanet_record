@@ -41,12 +41,12 @@ class Runner:
         else:
             pass  # not found and no dictionaries - pass
 
-    def _process_configs(self, custom_filepath: str):
+    def _process_configs(self, custom_filepath: str) -> dict:
         """
-        _process_configs _summary_
+        _process_configs Updates the default config and merges with relevant parts of the install config to have the full parameter set data is collected with available.
 
         Returns:
-            _type_: _description_
+            dict: Full configuration for the runner.
         """
 
         # get config files, then run. Their existence is guaranteed by the install
@@ -83,23 +83,18 @@ class Runner:
 
     def _process_runtime(self, config: dict):
         """
-        _process_runtime _summary_
+        _process_runtime Prcoess the runtime limit as a precondition for collecting data.
 
         Args:
-            config (dict): _description_
-
-        Raises:
-            ValueError: _description_
+            config (dict): Config containing 'runtime' or 'run_until' data nodes
 
         Returns:
-            _type_: _description_
+            int or datetime or None: If 'runtime' is given: the number of seconds to collect data. If 'run_until' is given: the timestamp (accurate to the second) until which data shall be collected. If none of both is given: None, meaning data collection runs indefinitely
         """
 
-        run_until = (
-            config["Output"]["run_until"] if "run_until" in config["Output"] else None
-        )
+        run_until = config["run_until"] if "run_until" in config else None
 
-        runtime = config["Output"]["runtime"] if "runtime" in config["Output"] else None
+        runtime = config["runtime"] if "runtime" in config else None
 
         if run_until is not None and runtime is not None:
             warnings.warn(
@@ -109,9 +104,6 @@ class Runner:
             return runtime
 
         elif run_until is None and runtime is None:
-            raise ValueError(
-                "'run_until' or 'runtime' must be given in 'Output' node of config."
-            )
             return None
 
         elif run_until is not None:
@@ -121,17 +113,18 @@ class Runner:
         elif runtime is not None:
             return runtime
 
-    def __init__(self, custom_configpath: str):
+    def __init__(self, custom_configpath: str = ""):
         """
-        __init__ _summary_
-
+        __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
+                 Merges the updated config with the installation info and dumps everything to the same folder where
+                 the data is recorded to.
         Args:
-            custom_configpath (str): _description_
+            custom_configpath (str, optional): Path to a custom configuration path. Defaults to "".
         """
 
         self.config = self._process_configs(custom_configpath)
 
-        self.end_time = self._process_runtime(self.config)
+        self.end_time = self._process_runtime(self.config["Output"])
 
         output = str(Path(self.config["Output"]["output_folder"]).expanduser())
 
@@ -141,14 +134,19 @@ class Runner:
         )
 
     @property
-    def output(self):
+    def output(self) -> str:
+        """
+        output Get the absolute path the data is recorded to
+
+        Returns:
+            str: Absolute path the data is recorded to
+        """
         return self.recorder.output_folder
 
     def run(self):
         """
         run Collect data until a certain datetime has been reached,
         or for a certain amount of seconds or indefinitely.
-        Uses a yaml user supplied yaml file to update the default arguments and stores it together with the data.
         """
 
         if self.end_time is None:
