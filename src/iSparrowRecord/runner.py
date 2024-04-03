@@ -5,9 +5,9 @@ from datetime import datetime
 import warnings
 import time
 
-from .utils import update_dict_recursive
+from iSparrowRecord.utils import update_dict_recursive
+from iSparrowRecord.audio_recording import Recorder
 
-from iSparrowRecord import Recorder
 
 class Runner:
     """
