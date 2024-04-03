@@ -8,7 +8,8 @@ import pytest
 
 def test_dict_merging(install, folders):
     _, _, _, _, cfgdir = folders
-    runner = Runner(cfgdir)
+
+    runner = Runner(Path(cfgdir) / "custom_example.yml")
 
     base = {
         "a": {"x": 3, "y": {"l": 2, "k": "hello"}},
@@ -78,11 +79,9 @@ def test_dict_merging(install, folders):
 def test_config_processing(install, folders):
     _, _, _, _, cfgdir = folders
 
-    runner = Runner(cfgdir)
+    runner = Runner(Path(cfgdir) / "custom_example.yml")
 
-    cfgdir = Path(__file__).resolve().parent.parent / Path("config")
-
-    cfg = runner._process_configs(cfgdir / "custom_example.yml")
+    cfg = runner._process_configs(Path(cfgdir) / "custom_example.yml")
     assert cfg["Output"]["runtime"] == 8
     assert cfg["Output"]["output_folder"] == "~/iSparrow_data"
     assert cfg["Recording"]["sample_rate"] == 32000
@@ -112,10 +111,9 @@ def test_config_processing(install, folders):
 def test_condition_creation(install, folders):
     _, _, _, _, cfgdir = folders
 
-    runner = Runner(cfgdir)
-    cfgdir = Path(__file__).resolve().parent.parent / Path("config")
+    runner = Runner(Path(cfgdir) / "custom_example.yml" )
 
-    cfg = runner._process_configs(cfgdir / "custom_example.yml")
+    cfg = runner._process_configs(Path(cfgdir) / "custom_example.yml")
 
     end_time = runner._process_runtime(cfg["Output"])
 
@@ -140,12 +138,10 @@ def test_condition_creation(install, folders):
     assert end_time == datetime.strptime("2024-04-04_12:05:24", "%Y-%m-%d_%H:%M:%S")
 
 
-def test_runner_creation():
-    cfgdir = (
-        Path(__file__).resolve().parent.parent / Path("config") / "custom_example.yml"
-    )
+def test_runner_creation(install, folders):
+    _, _, _, _, cfgdir = folders
 
-    runner = Runner(cfgdir)
+    runner = Runner(Path(cfgdir) / "custom_example.yml")
 
     assert runner.end_time == 8
     assert "Install" in runner.config
