@@ -6,7 +6,7 @@ import pytest
 
 
 def test_dict_merging(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
     runner = Runner(Path(cfgdir) / "custom_example.yml")
 
@@ -76,7 +76,7 @@ def test_dict_merging(install, folders):
 
 
 def test_config_processing(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
     runner = Runner(Path(cfgdir) / "custom_example.yml")
 
@@ -108,9 +108,9 @@ def test_config_processing(install, folders):
 
 
 def test_condition_creation(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
-    runner = Runner(Path(cfgdir) / "custom_example.yml" )
+    runner = Runner(Path(cfgdir) / "custom_example.yml")
 
     cfg = runner._process_configs(Path(cfgdir) / "custom_example.yml")
 
@@ -138,10 +138,11 @@ def test_condition_creation(install, folders):
 
     del cfg["Output"]["run_until"]
     end_time = runner._process_runtime(cfg["Output"])
-    assert end_time is None 
+    assert end_time is None
+
 
 def test_runner_creation(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
     runner = Runner(Path(cfgdir) / "custom_example.yml")
 

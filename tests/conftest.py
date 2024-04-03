@@ -1,16 +1,10 @@
-import sys
 from pathlib import Path
-
-sys.path.append(str(Path(__file__).parent))
-
 import pytest
 import shutil
 import yaml
-import set_up_sparrow as spf
+from iSparrowRecord import set_up_sparrow as spf
 
-HOME = None
 DATA = None
-OUTPUT = None
 CONFIG = None
 
 
@@ -20,20 +14,16 @@ def install(request):
 
     spf.set_up()
 
-    global HOME, DATA, OUTPUT, CONFIG
-    HOME = spf.HOME
-    DATA = spf.DATA
-    OUTPUT = spf.OUTPUT
-    CONFIG = spf.CONFIG
+    global DATA, CONFIG
+    DATA = spf.SPARROW_RECORD_DATA
+    CONFIG = spf.SPARROW_RECORD_CONFIG
 
-    print("folders: ", HOME, DATA, OUTPUT, CONFIG)
+    print("folders: ", DATA, CONFIG)
 
     # remove again after usage
 
     def teardown():
-        shutil.rmtree(str(HOME))
         shutil.rmtree(str(DATA))
-        shutil.rmtree(str(OUTPUT))
         shutil.rmtree(str(CONFIG))
 
     request.addfinalizer(teardown)
@@ -41,11 +31,9 @@ def install(request):
 
 @pytest.fixture(scope="module")
 def folders():
-    custom_cfgdir = (
-        Path(__file__).resolve().parent.parent / Path("config")
-    )
-    global HOME, DATA, OUTPUT, CONFIG
-    return str(HOME), str(DATA), str(OUTPUT), str(CONFIG), str(custom_cfgdir)
+    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
+    global DATA, CONFIG
+    return str(CONFIG), str(DATA), str(custom_cfgdir)
 
 
 @pytest.fixture(scope="module")

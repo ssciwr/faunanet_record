@@ -7,7 +7,7 @@ import librosa
 
 
 def test_integration(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
     install_filepath = Path(user_config_dir("iSparrowRecord")) / "install.yml"
     with open(install_filepath, "r") as cfgfile:

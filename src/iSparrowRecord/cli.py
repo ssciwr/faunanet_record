@@ -28,6 +28,7 @@ def run(cfg: str, suffix: str, standalone: bool):
     if standalone:
         # test if the setup has been done already and if not do again
         sus.set_up()
+        dump_config = True
 
     custom_cfg = {"Output": {"output_folder": sus.SPARROW_RECORD_DATA}}
     if cfg != "":
@@ -41,7 +42,7 @@ def run(cfg: str, suffix: str, standalone: bool):
     # update config
     custom_cfg["Output"]["output_folder"] = str(folderpath)
 
-    runner = Runner(custom_cfg)
+    runner = Runner(custom_cfg, dump_config=dump_config)
 
     runner.run()
 
