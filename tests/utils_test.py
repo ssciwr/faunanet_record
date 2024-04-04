@@ -1,4 +1,5 @@
 from iSparrowRecord import utils
+import pytest
 
 
 def test_dict_merging(install, folders):
@@ -67,3 +68,13 @@ def test_dict_merging(install, folders):
     assert base["b"]["p"] == "c"
     assert base["b"]["d"]["v"] == 5
     assert "s" not in base["b"]
+
+
+def test_dict_from_string():
+
+    assert utils.dict_from_string("{'a': {'b': 3, 'c': 5}}") == {"a": {"b": 3, "c": 5}}
+
+    with pytest.raises(ValueError) as exc_info:
+        utils.dict_from_string("3")
+
+    assert str(exc_info.value) == "Invalid dictionary format"
