@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 
 
-def test_cli_install(new_folders):
-    cfg, data, custom_cfg = new_folders
+def test_cli_install(folders, empty_data_folder):
+    cfg, data, custom_cfg = folders
 
     runner = CliRunner()
 
@@ -40,8 +40,8 @@ def test_cli_install(new_folders):
     )
 
 
-def test_cli_run_default(new_folders):
-    _, data, _ = new_folders
+def test_cli_run_default(folders, empty_data_folder):
+    _, data, _ = folders
 
     runner = CliRunner()
 
@@ -69,7 +69,7 @@ def test_cli_run_default(new_folders):
     assert wav_count == 3
 
 
-def test_cli_run_debug():
+def test_cli_run_debug(empty_data_folder):
     runner = CliRunner()
 
     with pytest.warns(UserWarning) as warning_info:
@@ -93,8 +93,8 @@ def test_cli_run_debug():
     )
 
 
-def test_cli_run_custom(new_folders):
-    _, data, cfgdir = new_folders
+def test_cli_run_custom(folders, empty_data_folder):
+    _, data, cfgdir = folders
 
     runner = CliRunner()
 
@@ -133,8 +133,8 @@ def test_cli_run_custom(new_folders):
     assert wav_count == 2
 
 
-def test_cli_run_custom_replace(new_folders):
-    _, data, cfgdir = new_folders
+def test_cli_run_custom_replace(folders, empty_data_folder):
+    _, data, cfgdir = folders
 
     runner = CliRunner()
 

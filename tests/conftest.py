@@ -29,17 +29,14 @@ def install(request):
 
 
 @pytest.fixture()
-def new_folders():
-    global DATA, CONFIG
-    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
-
-    Path(DATA).mkdir(parents=True, exist_ok=True)
+def empty_data_folder(request):
+    global DATA
 
     def teardown():
-        shutil.rmtree(str(DATA))
-        shutil.rmtree(str(CONFIG))
+        for thing in Path(DATA).iterdir():
+            shutil.rmtree(str(thing))
 
-    return str(CONFIG), str(DATA), str(custom_cfgdir)
+    request.addfinalizer(teardown)
 
 
 @pytest.fixture()
