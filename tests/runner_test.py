@@ -9,7 +9,7 @@ def test_config_processing(install, folders):
     _, _, cfgdir = folders
     config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
-    runner = Runner(config, dump_config=True)
+    runner = Runner(config)
 
     cfg = runner._process_configs(config)
     assert cfg["Output"]["runtime"] == 8
@@ -18,17 +18,14 @@ def test_config_processing(install, folders):
     assert cfg["Recording"]["length_s"] == 4
     assert cfg["Recording"]["channels"] == 1
     assert cfg["Recording"]["mode"] == "record"
-    assert cfg["Install"]["Directories"]["home"] == str(Path.home() / "iSparrow")
     assert cfg["Install"]["Directories"]["data"] == str(Path.home() / "iSparrow_data")
-    assert cfg["Install"]["Directories"]["output"] == str(
-        Path.home() / "iSparrow_output"
-    )
 
+    # test that the timestamp is correct at least to the minute. Seconds can be too short...
     part_of_name = datetime.now().strftime("%y%m%d_%H%M")
 
     # check that yaml is written to data folder
     yaml_counter = 0
-    for filename in (Path.home() / Path("iSparrow_data")).iterdir():
+    for filename in Path(runner.output_path).iterdir():
         if filename.suffix == ".yml":
             yaml_counter += 1
 
@@ -44,6 +41,9 @@ def test_condition_creation(install, folders):
     _, _, cfgdir = folders
 
     config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
+
+    # modify config with a suffix unique for this test case
+    config["Output"]["data_folder_suffix"] = "_condition_creation"
 
     runner = Runner(config)
 
@@ -80,6 +80,8 @@ def test_runner_creation(install, folders):
     _, _, cfgdir = folders
 
     config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
+    # modify config with a suffix unique for this test case
+    config["Output"]["data_folder_suffix"] = "_runner_creation"
 
     runner = Runner(config)
 
@@ -87,5 +89,8 @@ def test_runner_creation(install, folders):
     assert "Install" in runner.config
     assert "Output" in runner.config
     assert "Recording" in runner.config
-    assert runner.output == str(Path("~/iSparrow_data").expanduser())
+    assert runner.output_path == str(
+        Path("~/iSparrow_data").expanduser() / (datetime.now().strftime("%y%m%d_%H%M%S")
+        + "_runner_creation")
+    )
     assert runner.recorder.is_running is False  # not yet running
