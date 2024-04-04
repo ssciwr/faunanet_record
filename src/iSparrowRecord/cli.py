@@ -10,6 +10,7 @@ from platformdirs import user_config_dir
 
 @click.group()
 def cli():
+    # empty because everything is done in subcommands
     pass
 
 

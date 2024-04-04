@@ -5,7 +5,7 @@ import pytest
 
 
 def test_cli_install(folders, empty_data_folder):
-    cfg, data, custom_cfg = folders
+    _, _, custom_cfg = folders
 
     runner = CliRunner()
 
