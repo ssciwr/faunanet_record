@@ -2,8 +2,7 @@ from iSparrowRecord import utils
 import pytest
 
 
-def test_dict_merging(install, folders):
-    _, _, cfgdir = folders
+def test_dict_merging():
 
     base = {
         "a": {"x": 3, "y": {"l": 2, "k": "hello"}},
