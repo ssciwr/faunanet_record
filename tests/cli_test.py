@@ -4,8 +4,8 @@ from pathlib import Path
 import pytest
 
 
-def test_cli_install(folders):
-    cfg, data, custom_cfg = folders
+def test_cli_install(new_folders):
+    cfg, data, custom_cfg = new_folders
 
     runner = CliRunner()
 
@@ -40,8 +40,8 @@ def test_cli_install(folders):
     )
 
 
-def test_cli_run_default(folders):
-    _, data, _ = folders
+def test_cli_run_default(new_folders):
+    _, data, _ = new_folders
 
     runner = CliRunner()
 
@@ -50,11 +50,14 @@ def test_cli_run_default(folders):
     # make sure things ran smoothly
     assert result.exit_code == 0
 
-    data_dir = list(Path(data).iterdir())[0]
+    data_dirs = list(Path(data).iterdir())
+    most_recent_folder = max(
+        data_dirs, key=lambda folder: folder.stat().st_mtime, default=None
+    )
 
     yml_count = 0
     wav_count = 0
-    for filename in Path(data_dir).iterdir():
+    for filename in Path(most_recent_folder).iterdir():
         if filename.suffix == ".yml":
             yml_count += 1
 
@@ -66,7 +69,7 @@ def test_cli_run_default(folders):
     assert wav_count == 3
 
 
-def test_cli_run_debug(folders):
+def test_cli_run_debug():
     runner = CliRunner()
 
     with pytest.warns(UserWarning) as warning_info:
@@ -90,69 +93,76 @@ def test_cli_run_debug(folders):
     )
 
 
-# def test_cli_run_custom(folders):
-#     _, data, cfgdir = folders
+def test_cli_run_custom(new_folders):
+    _, data, cfgdir = new_folders
 
-#     runner = CliRunner()
+    runner = CliRunner()
 
-#     path = str(Path(cfgdir) / "custom_example.yml")
+    path = str(Path(cfgdir) / "custom_example.yml")
 
-#     result = runner.invoke(cli.run, f"--cfg={path}")
+    result = runner.invoke(cli.run, f"--cfg={path}")
 
-#     assert result.exit_code == 0
+    assert result.exit_code == 0
 
-#     res = result.output.split("\n")
+    res = result.output.split("\n")
 
-#     print(res)
-#     assert res == [
-#         "start data collection",
-#         "...preparing config",
-#         "... ...using custom run config:  " + path,
-#         "...creating runner",
-#         "start collecting data for  8  seconds with  4 seconds per file",
-#         "",
-#     ]
+    assert res == [
+        "start data collection",
+        "...preparing config",
+        "... ...using custom run config:  " + path,
+        "...creating runner",
+        "start collecting data for  8  seconds with  4 seconds per file",
+        "",
+    ]
 
-#     data_dir = list(Path(data).iterdir())[0]
+    data_dirs = list(Path(data).iterdir())
+    most_recent_folder = max(
+        data_dirs, key=lambda folder: folder.stat().st_mtime, default=None
+    )
+    yml_count = 0
+    wav_count = 0
+    for filename in Path(most_recent_folder).iterdir():
+        if filename.suffix == ".yml":
+            yml_count += 1
 
-#     yml_count = 0
-#     wav_count = 0
-#     for filename in Path(data_dir).iterdir():
-#         if filename.suffix == ".yml":
-#             yml_count += 1
+        if filename.suffix == ".wav":
+            wav_count += 1
 
-#         if filename.suffix == ".wav":
-#             wav_count += 1
-
-#     # check output
-#     assert yml_count == 1
-#     assert wav_count == 2
+    # check output
+    assert yml_count == 1
+    assert wav_count == 2
 
 
-# def test_cli_run_custom_replace(folders):
-#     _, data, cfgdir = folders
+def test_cli_run_custom_replace(new_folders):
+    _, data, cfgdir = new_folders
 
-#     runner = CliRunner()
+    runner = CliRunner()
 
-#     path = str(Path(cfgdir) / "custom_example.yml")
+    path = str(Path(cfgdir) / "custom_example.yml")
 
-#     result = runner.invoke(
-#         cli.run, f"--cfg={path} --replace='{'Recording':{'length_s':2}}'"
-#     )
+    dictstr = '\'{"Recording":{"length_s":2}}\''
 
-#     assert result.exit_code == 0
+    result = runner.invoke(cli.run, f"--cfg={path} --replace={dictstr}")
 
-#     data_dir = list(Path(data).iterdir())[0]
+    assert result.exit_code == 0
 
-#     yml_count = 0
-#     wav_count = 0
-#     for filename in Path(data_dir).iterdir():
-#         if filename.suffix == ".yml":
-#             yml_count += 1
+    data_dirs = list(Path(data).iterdir())
 
-#         if filename.suffix == ".wav":
-#             wav_count += 1
+    most_recent_folder = max(
+        data_dirs, key=lambda folder: folder.stat().st_mtime, default=None
+    )
 
-#     # check output
-#     assert yml_count == 1
-#     assert wav_count == 4
+    yml_count = 0
+
+    wav_count = 0
+
+    for filename in Path(most_recent_folder).iterdir():
+        if filename.suffix == ".yml":
+            yml_count += 1
+
+        if filename.suffix == ".wav":
+            wav_count += 1
+
+    # check output
+    assert yml_count == 1
+    assert wav_count == 4

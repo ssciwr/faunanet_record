@@ -73,7 +73,7 @@ def run(cfg: str, debug: bool, replace: dict):
     else:
         custom_cfg = replace_dict
 
-    print("...")
+    print("...creating runner")
     runner = Runner(custom_cfg)
 
     runner.run()

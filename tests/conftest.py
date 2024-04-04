@@ -28,14 +28,28 @@ def install(request):
     request.addfinalizer(teardown)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
+def new_folders():
+    global DATA, CONFIG
+    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
+
+    Path(DATA).mkdir(parents=True, exist_ok=True)
+
+    def teardown():
+        shutil.rmtree(str(DATA))
+        shutil.rmtree(str(CONFIG))
+
+    return str(CONFIG), str(DATA), str(custom_cfgdir)
+
+
+@pytest.fixture()
 def folders():
     custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
     global DATA, CONFIG
     return str(CONFIG), str(DATA), str(custom_cfgdir)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def audio_recorder_fx():
     filepath = Path(__file__).resolve()
     testpath = filepath.parent
