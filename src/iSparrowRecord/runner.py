@@ -99,14 +99,13 @@ class Runner:
         else:
             return runtime
 
-    def __init__(self, custom_config: dict = {}, dump_config: bool = False):
+    def __init__(self, custom_config: dict = {}):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
                  Merges the updated config with the installation info and dumps everything to the same folder where
                  the data is recorded to.
         Args:
             custom_config (dict, optional): A custom configuration dictionary containing key-value pairs that correspond to arguments used by this class or by the Recorder. Defaults to {}.
-            dump_config (bool, optional): Wether to write the full config file to disk together with the data. Defaults to False.
             suffix (str, optional): Suffix to add to run folder
         """
 
@@ -134,7 +133,7 @@ class Runner:
         self.end_time = self._process_runtime(self.config["Output"])
 
         # dump the config alongside the data
-        if dump_config:
+        if self.config["Output"]["dump_config"] is True:
             time = datetime.now().strftime("%y%m%d_%H%M%S")
 
             with open(
