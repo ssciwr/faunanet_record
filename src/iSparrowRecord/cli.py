@@ -1,11 +1,11 @@
-import click
-import iSparrowRecord.set_up_sparrow as sus
-from iSparrowRecord.utils import read_yaml
-from iSparrowRecord.runner import Runner
+from .utils import read_yaml, update_dict_recursive, dict_from_string
+from .runner import Runner
+from . import set_up_sparrow as sus
 
-from datetime import datetime
 from pathlib import Path
 import warnings
+import click
+from platformdirs import user_config_dir
 
 
 @click.group()
@@ -14,53 +14,69 @@ def cli():
 
 
 @cli.command()
-@click.option("--cfg", help="custom configuration file", default="")
-@click.option(
-    "--suffix",
-    help="Folder suffix for data collection",
-    default="",
-)
-@click.option(
-    "--standalone",
-    is_flag=True,
-    help="Whether the package runs in standalone mode or as part of iSparrow",
-    default=False,
-)
-@click.option("--debug", help="Enable debug output", is_flag=True)
-def run(cfg: str, suffix: str, standalone: bool, debug: bool):
-
-    if debug:
-        warnings.Warn("Debug output currently not implemented")
-
-    if standalone:
-        # test if the setup has been done already and if not do again
-        sus.set_up()
-        dump_config = True
-
-    custom_cfg = {"Output": {"output_folder": sus.SPARROW_RECORD_DATA}}
-
-    if cfg != "":
-        custom_filepath = Path(cfg).expanduser()
-        print("Using custom config: ", custom_filepath)
-        custom_cfg = read_yaml(custom_filepath)
-
-    foldername = datetime.now().strftime("%y%m%d_%H%M%S") + "_" + suffix
-    folderpath = Path(sus.SPARROW_RECORD_DATA).expanduser() / foldername
-    folderpath.mkdir()
-
-    # update config
-    custom_cfg["Output"]["output_folder"] = str(folderpath)
-
-    runner = Runner(custom_cfg, dump_config=dump_config)
-
-    # FIXME: make this into something that runs in the background
-    runner.run()
+@click.argument("cfg", type=str)
+def install(cfg: str):
+    sus.set_up(cfg)
 
 
 @cli.command()
-def stop():
-    click.echo("stop running shit")
+@click.option("--cfg", help="custom configuration file", default="")
+@click.option("--debug", help="Enable debug output", is_flag=True)
+@click.option(
+    "--replace",
+    help="Replace any entry in the config with a different value. Mostly useful for debugging or testing purposes.",
+    default="{}",
+)
+def run(cfg: str, debug: bool, replace: dict):
+    # raise warning that no logging is there yet
+    if debug:
+        warnings.Warn("Debug output currently not implemented")
 
+    install_path = Path(user_config_dir("iSparrowRecord")) / "install.yml"
 
-if __name__ == "__main__":
-    cli()
+    if install_path.is_file() is False:
+        raise FileNotFoundError(
+            f"No install config file found at {install_path}. Has the system be set up by using the 'install' command line option first?"
+        )
+
+    # read install file and check if the system has been set up, raise if not
+    install_cfg = read_yaml(
+        str(Path(user_config_dir("iSparrowRecord")) / "install.yml")
+    )
+
+    data_folder = Path(install_cfg["Directories"]["data"]).expanduser()
+
+    if data_folder.is_dir() is False:
+        raise FileNotFoundError(
+            f"Folder {data_folder} not found. Has the system be set up by using the 'install' command line option first?"
+        )
+
+    replace_dict = dict_from_string(replace)
+
+    if cfg != "":
+        custom_filepath = Path(cfg).expanduser()
+
+        print("... using custom run config: ", custom_filepath)
+
+        custom_cfg = read_yaml(custom_filepath)
+
+        # when custom_cfg and replace have no top level nodes, they are merged, otherwise the leaves of custom_cfg is updated with replace.
+        if len(set(custom_cfg.keys()).intersection(set(replace_dict.keys()))) > 0:
+            update_dict_recursive(
+                custom_cfg,
+                replace_dict
+            )
+        else:
+            custom_cfg = custom_cfg | replace_dict
+    else:
+        custom_cfg = replace_dict
+
+    dump_config = (
+        custom_cfg["Output"]["dump_config"]
+        if "dump_config" in custom_cfg["Output"]
+        else False
+    )
+
+    runner = Runner(custom_cfg, dump_config)
+
+    runner.run()
