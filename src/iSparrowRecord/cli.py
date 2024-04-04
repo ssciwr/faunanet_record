@@ -29,8 +29,13 @@ def install(cfg: str):
 )
 def run(cfg: str, debug: bool, replace: dict):
     # raise warning that no logging is there yet
+    print("start data collection")
     if debug:
-        warnings.Warn("Debug output currently not implemented")
+        warnings.warn(
+            "Debug output currently not yet implemented. Will run, but without any debug output."
+        )
+
+    print("...preparing config")
 
     install_path = Path(user_config_dir("iSparrowRecord")) / "install.yml"
 
@@ -56,27 +61,19 @@ def run(cfg: str, debug: bool, replace: dict):
     if cfg != "":
         custom_filepath = Path(cfg).expanduser()
 
-        print("... using custom run config: ", custom_filepath)
+        print("... ...using custom run config: ", custom_filepath)
 
         custom_cfg = read_yaml(custom_filepath)
 
         # when custom_cfg and replace have no top level nodes, they are merged, otherwise the leaves of custom_cfg is updated with replace.
         if len(set(custom_cfg.keys()).intersection(set(replace_dict.keys()))) > 0:
-            update_dict_recursive(
-                custom_cfg,
-                replace_dict
-            )
+            update_dict_recursive(custom_cfg, replace_dict)
         else:
             custom_cfg = custom_cfg | replace_dict
     else:
         custom_cfg = replace_dict
 
-    dump_config = (
-        custom_cfg["Output"]["dump_config"]
-        if "dump_config" in custom_cfg["Output"]
-        else False
-    )
-
-    runner = Runner(custom_cfg, dump_config)
+    print("...")
+    runner = Runner(custom_cfg)
 
     runner.run()
