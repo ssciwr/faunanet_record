@@ -23,7 +23,7 @@ def make_directories(base_cfg_dirs: dict):
     Returns:
         tuple: created folders: (isparrow-homefolder, modelsfolder, datafolder, outputfolder, examplefolder)
     """
-    print("...Making directories...")
+    print("...making directories")
 
     if "data" not in base_cfg_dirs:
         raise KeyError("The data folder for iSparrow must be given in the base config")
@@ -38,13 +38,13 @@ def make_directories(base_cfg_dirs: dict):
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
 def set_up(
-    cfg_path: str = str(Path(__file__).resolve().parent.parent.parent / "config"),
+    cfg_path: str,
 ):
-    print("Creating iSparrow folders and downloading data... ")
+    print("Creating iSparrow folders and downloading data")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
 
-    print("using install config", cfg_path)
+    print("...using install config", cfg_path)
     cfg = read_yaml(Path(cfg_path) / "install.yml")
 
     data, config = make_directories(cfg["Directories"])

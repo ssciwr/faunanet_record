@@ -175,7 +175,7 @@ class Recorder(RecorderBase):
                 while stop_condition(self) is False and self.stream.is_active():
 
                     filename = datetime.now().strftime(self.filename_format) + ".wav"
-                    print(filename)
+
                     _, frames = self.stream_audio()
 
                     with wave.open(

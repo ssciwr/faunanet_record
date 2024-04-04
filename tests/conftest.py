@@ -11,14 +11,13 @@ CONFIG = None
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
 @pytest.fixture(scope="module", autouse=True)
 def install(request):
+    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
 
-    spf.set_up()
+    spf.set_up(custom_cfgdir)
 
     global DATA, CONFIG
     DATA = spf.SPARROW_RECORD_DATA
     CONFIG = spf.SPARROW_RECORD_CONFIG
-
-    print("folders: ", DATA, CONFIG)
 
     # remove again after usage
 

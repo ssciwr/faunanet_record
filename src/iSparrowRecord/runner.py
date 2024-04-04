@@ -159,12 +159,12 @@ class Runner:
             self.recorder.start(lambda x: False)
 
         if isinstance(self.end_time, int):
-            print("start collecting data for ", self.end_time, " seconds")
+            print("start collecting data for ", self.end_time, " seconds with ", self.recorder.length_in_s, "seconds per file")
             begin_time = time.time()
             # run until time passed
             self.recorder.start(lambda x: time.time() > begin_time + self.end_time)
 
         if isinstance(self.end_time, datetime):
-            print("start collecting data untils ", self.end_time)
+            print("start collecting data until ", self.end_time, "seconds with ", self.recorder.length_in_s, "seconds per file")
             # run until date is reached
             self.recorder.start(lambda x: datetime.now() > self.end_time)
