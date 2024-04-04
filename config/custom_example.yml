@@ -1,5 +1,7 @@
 Output:
   runtime: 8
+  dump_config: True
+  data_folder_suffix: "_test"
 Recording:
   sample_rate: 32000
   length_s: 4

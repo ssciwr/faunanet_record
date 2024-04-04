@@ -1,101 +1,31 @@
 from iSparrowRecord import Runner
-
+from iSparrowRecord import utils
 from pathlib import Path
 from datetime import datetime
 import pytest
 
 
-def test_dict_merging(install, folders):
-    _, _, _, _, cfgdir = folders
-
-    runner = Runner(Path(cfgdir) / "custom_example.yml")
-
-    base = {
-        "a": {"x": 3, "y": {"l": 2, "k": "hello"}},
-        "b": {"p": "c", "d": {"v": 5, "w": 6}},
-    }
-
-    update = {
-        "y": {"l": 8},
-        "b": {
-            "d": {
-                "w": -5,
-            }
-        },
-    }
-
-    runner._update_dict_recursive(base, update)
-
-    # stuff not in 'custom_cfg' must stay, other stuff must go
-    assert base["a"]["x"] == 3
-    assert base["a"]["y"]["l"] == 8
-    assert base["a"]["y"]["k"] == "hello"
-    assert base["b"]["p"] == "c"
-    assert base["b"]["d"]["v"] == 5
-    assert base["b"]["d"]["w"] == -5
-
-    # update with oneself and with empty dict do nothing
-    base = {
-        "a": {"x": 3, "y": {"l": 2, "k": "hello"}},
-        "b": {"p": "c", "d": {"v": 5, "w": 6}},
-    }
-
-    runner._update_dict_recursive(base, base)
-    assert base["a"]["x"] == 3
-    assert base["a"]["y"]["l"] == 2
-    assert base["a"]["y"]["k"] == "hello"
-    assert base["b"]["p"] == "c"
-    assert base["b"]["d"]["v"] == 5
-    assert base["b"]["d"]["w"] == 6
-
-    runner._update_dict_recursive(base, {})
-    assert base["a"]["x"] == 3
-    assert base["a"]["y"]["l"] == 2
-    assert base["a"]["y"]["k"] == "hello"
-    assert base["b"]["p"] == "c"
-    assert base["b"]["d"]["v"] == 5
-    assert base["b"]["d"]["w"] == 6
-
-    # paths not in 'base' must be ignored
-    update = {
-        "y": {"l": 8},
-        "b": {
-            "s": {
-                "k": -5,
-            }
-        },
-    }
-
-    runner._update_dict_recursive(base, update)
-    assert base["a"]["x"] == 3
-    assert base["a"]["y"]["l"] == 8
-    assert base["a"]["y"]["k"] == "hello"
-    assert base["b"]["p"] == "c"
-    assert base["b"]["d"]["v"] == 5
-    assert "s" not in base["b"]
-
-
 def test_config_processing(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
+    config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
-    runner = Runner(Path(cfgdir) / "custom_example.yml")
+    runner = Runner(config)
 
-    cfg = runner._process_configs(Path(cfgdir) / "custom_example.yml")
+    cfg = runner._process_configs(config)
     assert cfg["Output"]["runtime"] == 8
     assert cfg["Output"]["output_folder"] == "~/iSparrow_data"
     assert cfg["Recording"]["sample_rate"] == 32000
     assert cfg["Recording"]["length_s"] == 4
     assert cfg["Recording"]["channels"] == 1
     assert cfg["Recording"]["mode"] == "record"
-    assert cfg["Install"]["Directories"]["home"] == "~/iSparrow"
-    assert cfg["Install"]["Directories"]["data"] == "~/iSparrow_data"
-    assert cfg["Install"]["Directories"]["output"] == "~/iSparrow_output"
+    assert cfg["Install"]["Directories"]["data"] == str(Path.home() / "iSparrow_data")
 
+    # test that the timestamp is correct at least to the minute. Seconds can be too short...
     part_of_name = datetime.now().strftime("%y%m%d_%H%M")
 
     # check that yaml is written to data folder
     yaml_counter = 0
-    for filename in (Path.home() / Path("iSparrow_data")).iterdir():
+    for filename in Path(runner.output_path).iterdir():
         if filename.suffix == ".yml":
             yaml_counter += 1
 
@@ -108,11 +38,16 @@ def test_config_processing(install, folders):
 
 
 def test_condition_creation(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
-    runner = Runner(Path(cfgdir) / "custom_example.yml" )
+    config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
-    cfg = runner._process_configs(Path(cfgdir) / "custom_example.yml")
+    # modify config with a suffix unique for this test case
+    config["Output"]["data_folder_suffix"] = "_condition_creation"
+
+    runner = Runner(config)
+
+    cfg = runner._process_configs(config)
 
     end_time = runner._process_runtime(cfg["Output"])
 
@@ -138,16 +73,24 @@ def test_condition_creation(install, folders):
 
     del cfg["Output"]["run_until"]
     end_time = runner._process_runtime(cfg["Output"])
-    assert end_time is None 
+    assert end_time is None
+
 
 def test_runner_creation(install, folders):
-    _, _, _, _, cfgdir = folders
+    _, _, cfgdir = folders
 
-    runner = Runner(Path(cfgdir) / "custom_example.yml")
+    config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
+    # modify config with a suffix unique for this test case
+    config["Output"]["data_folder_suffix"] = "_runner_creation"
+
+    runner = Runner(config)
 
     assert runner.end_time == 8
     assert "Install" in runner.config
     assert "Output" in runner.config
     assert "Recording" in runner.config
-    assert runner.output == str(Path("~/iSparrow_data").expanduser())
+    assert runner.output_path == str(
+        Path("~/iSparrow_data").expanduser() / (datetime.now().strftime("%y%m%d_%H%M%S")
+        + "_runner_creation")
+    )
     assert runner.recorder.is_running is False  # not yet running
