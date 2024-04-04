@@ -5,8 +5,8 @@ from datetime import datetime
 import warnings
 import time
 
-from iSparrowRecord.utils import update_dict_recursive
-from iSparrowRecord.audio_recording import Recorder
+from .audio_recording import Recorder
+from .utils import update_dict_recursive
 
 
 class Runner:
@@ -52,10 +52,10 @@ class Runner:
         with open(default_filepath, "r") as cfgfile:
             default_cfg = yaml.safe_load(cfgfile)
 
-        update_dict_recursive(default_cfg, custom_cfg)
-
-        # dump complete config
         default_cfg["Install"] = sparrow_config
+
+        # README: make sure this is always last, such that the custom config can modify everything
+        update_dict_recursive(default_cfg, custom_cfg)
 
         return default_cfg
 
@@ -67,7 +67,10 @@ class Runner:
             config (dict): Config containing 'runtime' or 'run_until' data nodes
 
         Returns:
-            int or datetime or None: If 'runtime' is given: the number of seconds to collect data. If 'run_until' is given: the timestamp (accurate to the second) until which data shall be collected. If none of both is given: None, meaning data collection runs indefinitely
+            int or datetime or None: If 'runtime' is given: the number of seconds to collect data.
+                                    If 'run_until' is given: the timestamp (accurate to the second)
+                                    until which data shall be collected. If none of both is given:
+                                    None, meaning data collection runs indefinitely.
         """
         if "run_until" in config:
             run_until = config["run_until"]
@@ -104,38 +107,46 @@ class Runner:
         Args:
             custom_config (dict, optional): A custom configuration dictionary containing key-value pairs that correspond to arguments used by this class or by the Recorder. Defaults to {}.
             dump_config (bool, optional): Wether to write the full config file to disk together with the data. Defaults to False.
+            suffix (str, optional): Suffix to add to run folder
         """
 
         self.config = self._process_configs(custom_config)
 
-        self.end_time = self._process_runtime(self.config["Output"])
+        # make new folder for data dumping
+        foldername = (
+            datetime.now().strftime("%y%m%d_%H%M%S")
+            + self.config["Output"]["data_folder_suffix"]
+        )
 
-        output = str(Path(self.config["Output"]["output_folder"]).expanduser())
+        folderpath = (
+            Path(self.config["Install"]["Directories"]["data"]).expanduser()
+            / foldername
+        )
+
+        folderpath.mkdir()
+
+        self.output_path = str(folderpath)
+
+        # update config
+        self.config["Output"]["output_folder"] = self.output_path
+
+        # determine for how long the runner should collect data
+        self.end_time = self._process_runtime(self.config["Output"])
 
         # dump the config alongside the data
         if dump_config:
             time = datetime.now().strftime("%y%m%d_%H%M%S")
 
             with open(
-                Path(Path(output).expanduser()) / f"config_{time}.yml",
+                folderpath / f"config_{time}.yml",
                 "w",
             ) as outfile:
                 yaml.safe_dump(self.config, outfile)
 
-        # create recorder, then start
+        # create recorder
         self.recorder = Recorder(
-            output_folder=str(Path(output).expanduser()), **self.config["Recording"]
+            output_folder=str(folderpath), **self.config["Recording"]
         )
-
-    @property
-    def output(self) -> str:
-        """
-        output Get the absolute path the data is recorded to
-
-        Returns:
-            str: Absolute path the data is recorded to
-        """
-        return self.recorder.output_folder
 
     def run(self):
         """
@@ -144,21 +155,17 @@ class Runner:
         """
 
         if self.end_time is None:
+            print("start collecting data indefinitely")
             # run forever
             self.recorder.start(lambda x: False)
 
         if isinstance(self.end_time, int):
+            print("start collecting data for ", self.end_time, " seconds")
             begin_time = time.time()
             # run until time passed
             self.recorder.start(lambda x: time.time() > begin_time + self.end_time)
 
         if isinstance(self.end_time, datetime):
+            print("start collecting data untils ", self.end_time)
             # run until date is reached
             self.recorder.start(lambda x: datetime.now() > self.end_time)
-
-    def stop(self):
-        """
-        stop Stop the data collection process
-
-        """
-        self.recorder.stop()

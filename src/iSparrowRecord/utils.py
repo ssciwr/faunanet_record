@@ -1,5 +1,6 @@
 import yaml
 from pathlib import Path
+import ast
 
 
 def update_dict_recursive(base, update):
@@ -51,3 +52,17 @@ def read_yaml(path: str):
         cfg = yaml.safe_load(file)
 
     return cfg
+
+
+def dict_from_string(dict_repr: str):
+    dictionary = None
+    try:
+        # Convert the string representation of dictionary to a dictionary object
+        dictionary = ast.literal_eval(dict_repr)
+        if not isinstance(dictionary, dict):
+            raise ValueError("Invalid dictionary format")
+    except ValueError as e:
+        print("Error when converting dictionary string")
+        raise e
+
+    return dictionary
