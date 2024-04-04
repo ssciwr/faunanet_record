@@ -14,10 +14,10 @@ def test_cli_install(folders, empty_data_folder):
     assert result_install.exit_code == 0
 
     output = result_install.output.split("\n")
-    home = str(Path.home())
+
     assert output == [
         "Creating iSparrow folders and downloading data",
-        f"...using install config {home}/Development/iSparrowRecord/config",
+        f"...using install config {custom_cfg}",
         "...making directories",
         "Installation finished",
         "",
