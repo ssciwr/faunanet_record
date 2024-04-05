@@ -1,9 +1,9 @@
 import yaml
 from pathlib import Path
 from platformdirs import user_config_dir
-from datetime import datetime
+from datetime import datetime, timedelta
 import warnings
-import time
+from time import sleep
 
 from .audio_recording import Recorder
 from .utils import update_dict_recursive
@@ -99,6 +99,16 @@ class Runner:
         else:
             return runtime
 
+    def _define_starting_time(self) -> datetime:
+        """
+        _define_starting_time Get next full second of the starting time
+
+
+        Returns:
+            datetime: current time rounded to the NEXT full second
+        """
+        return (datetime.now() + timedelta(seconds=1)).replace(microsecond=0)
+
     def __init__(self, custom_config: dict = {}):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
@@ -150,7 +160,8 @@ class Runner:
     def run(self):
         """
         run Collect data until a certain datetime has been reached,
-        or for a certain amount of seconds or indefinitely.
+        or for a certain amount of seconds or indefinitely. Recorded audio data
+        is saved to .wav files in the given output folder.
         """
 
         if self.end_time is None:
@@ -159,12 +170,39 @@ class Runner:
             self.recorder.start(lambda x: False)
 
         if isinstance(self.end_time, int):
-            print("start collecting data for ", self.end_time, " seconds with ", self.recorder.length_in_s, "seconds per file")
-            begin_time = time.time()
-            # run until time passed
-            self.recorder.start(lambda x: time.time() > begin_time + self.end_time)
+
+            # run until time has passed
+            print(
+                "start collecting data for ",
+                self.end_time,
+                " seconds with ",
+                self.recorder.length_in_s,
+                "seconds per file",
+            )
+
+            start = self._define_starting_time()
+
+            stop = (start + timedelta(seconds=self.end_time)).replace(microsecond=0)
+
+            while datetime.now() < start:
+                sleep(0.001)
+
+            self.recorder.start(lambda x: datetime.now() >= stop)
 
         if isinstance(self.end_time, datetime):
-            print("start collecting data until ", self.end_time, "seconds with ", self.recorder.length_in_s, "seconds per file")
+
             # run until date is reached
-            self.recorder.start(lambda x: datetime.now() > self.end_time)
+            print(
+                "start collecting data until ",
+                self.end_time,
+                "with ",
+                self.recorder.length_in_s,
+                "seconds per file",
+            )
+
+            start = self._define_starting_time()
+
+            while datetime.now() < start:
+                sleep(0.01)
+
+            self.recorder.start(lambda x: datetime.now() >= self.end_time)
