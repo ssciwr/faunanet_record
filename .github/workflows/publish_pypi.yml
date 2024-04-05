@@ -1,0 +1,101 @@
+# based on: https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+name: Publish to PyPI
+
+on:
+    # Triggers the workflow on push or pull request events but only for the main branch
+    push:
+      branches: [ master,]
+jobs: 
+    build_for_pypi: 
+        name: Build distribution 
+        runs-on: ubuntu-latest 
+
+        steps:
+        - uses: actions/checkout@v4
+        - name: Set up Python
+          uses: actions/setup-python@v4 
+          with: 
+            python-version: "3.x"
+
+        - name: Install build 
+          run: >-
+            python3 -m 
+            pip install 
+            build 
+            --user 
+
+        - name: Build wheel and source dist 
+          run: python3 -m build
+
+        - name: Store package
+          uses: actions/upload-artifact@v3 
+          with: 
+            name: python-package-distribution 
+            path: dist/
+
+    publish_to_pypi:
+
+        name: Publish Python distribution to PyPI
+        if: startsWith(github.ref, 'refs/tags/')  # only publish on tag pushes 
+        needs: 
+        - build_for_pypi 
+        runs-on: ubuntu-latest 
+
+        environment:
+            name: pypi 
+            url: https://pypi.org/p/iSparrowRecord 
+
+        permissions:
+            id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+        steps:
+        - name: Download all the dists 
+          uses: actions/download-artifact@v4
+          with: 
+            name: python-package-distributions 
+            path: dist/
+        - name: Publish distribution to PyPI 
+          uses: pypa/gh-action-pypi-publish@v1.8.14
+
+    github-release: 
+        name: Sign the Ptyhon distribution with Sigstore and upload to github releases
+        needs: publish_to_pypi
+        runs-on: ubuntu-latest 
+
+        permissions: 
+            contents: write
+            id-token: write
+
+        steps: 
+        - name: Download all the dists 
+          uses: actions/download-artifact@v4
+          with: 
+            name: python-package-distributions
+            path: dist/
+
+        - name: Sign the dists with Sigstore 
+          uses: sigstore/gh-action-sigstore-python@v2.1.1
+          with:
+            inputs: >-
+              ./dist/*.tar.gz
+              ./dist/*.whl
+
+        - name: Create Github Release 
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
+          run: >- 
+            gh release create 
+            '${{ github.ref_name }}'
+            --repo '${{ github.repository }}'
+            --notes ""
+
+        # Upload to GitHub Release using the `gh` CLI.
+        # `dist/` contains the built packages, and the
+        # sigstore-produced signatures and certificates.
+        - name: Upload artifact signatures to GitHub Release
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
+          run: >-
+            gh release upload
+            '${{ github.ref_name }}' dist/**
+            --repo '${{ github.repository }}'
