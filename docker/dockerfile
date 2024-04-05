@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # set workdir in container 
 RUN mkdir -p /iSparrow
@@ -15,20 +15,21 @@ RUN apt-get install -y libportaudio2 libportaudiocpp0 portaudio19-dev libasound-
 ## clone repo README: could later be installed from pip, or install directly from repo
 RUN cd /iSparrow && git clone https://github.com/ssciwr/iSparrowRecord.git
 
-RUN cd /iSparrow/iSparrowRecord && ls
-
 WORKDIR /iSparrow/iSparrowRecord
+
+RUN git checkout -b 18-dockerize-isparrowdata origin/18-dockerize-isparrowdata && git pull
 
 ## install package 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install . 
 
 # change folder to home again
-WORKDIR /HOME/iSparrow
+WORKDIR /iSparrow
 
-# create mount point for host directory 
-VOLUME /HOME/iSparrow_data
+# create mount point for host directory
+RUN mkdir -p /iSparrow_data
+VOLUME /iSparrow_data
 
 
 # set default command to run when container starts
-CMD ["python", ""]
+CMD ["python", "/iSparrow/iSparrowRecord/scripts/run.py"]
