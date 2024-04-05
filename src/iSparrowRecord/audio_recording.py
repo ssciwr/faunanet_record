@@ -171,8 +171,7 @@ class Recorder(RecorderBase):
 
             if self.mode == "record":
 
-                # while True:
-                while stop_condition(self) is False and self.stream.is_active():
+                while stop_condition(self) is False:
 
                     filename = datetime.now().strftime(self.filename_format) + ".wav"
 
