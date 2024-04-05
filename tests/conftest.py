@@ -7,7 +7,6 @@ from iSparrowRecord import set_up_sparrow as spf
 DATA = None
 CONFIG = None
 
-
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
 @pytest.fixture(scope="module", autouse=True)
 def install(request):
