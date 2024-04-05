@@ -29,6 +29,6 @@ WORKDIR /HOME/iSparrow
 # create mount point for host directory 
 VOLUME /HOME/iSparrow_data
 
-# set default command to run when container starts
-CMD ["iSparrowRecord"]
 
+# set default command to run when container starts
+CMD ["python", ""]
