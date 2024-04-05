@@ -54,7 +54,6 @@ def test_audio_functionality_record_mode(
             self.x = 2
 
         def __call__(self, _):
-
             cond = self.x <= 0
 
             self.x -= 1
@@ -72,7 +71,7 @@ def test_audio_functionality_record_mode(
     current = datetime.now().strftime("%y%m%d")
 
     files = list(Path(recorder.output).iterdir())
-    print(files)
+
     assert len(files) == 2
 
     for audiofile in files:
@@ -82,8 +81,6 @@ def test_audio_functionality_record_mode(
         assert audiofile.suffix == ".wav"
 
     # read in file to test length, samplerate, num_samples
-    print("problem path: ", str(Path(recorder.output) / files[0]))
-
     data, rate = librosa.load(Path(DATA) / files[0], sr=48000, res_type="kaiser_fast")
 
     duration = librosa.get_duration(y=data, sr=rate)

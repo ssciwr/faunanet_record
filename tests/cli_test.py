@@ -58,6 +58,7 @@ def test_cli_run_default(folders, empty_data_folder):
     yml_count = 0
     wav_count = 0
     for filename in Path(most_recent_folder).iterdir():
+
         if filename.suffix == ".yml":
             yml_count += 1
 
@@ -100,6 +101,10 @@ def test_cli_run_custom(folders, empty_data_folder):
 
     path = str(Path(cfgdir) / "custom_example.yml")
 
+    data_dirs = list(Path(data).iterdir())
+
+    assert len(data_dirs) == 0
+
     result = runner.invoke(cli.run, f"--cfg={path}")
 
     assert result.exit_code == 0
@@ -116,11 +121,17 @@ def test_cli_run_custom(folders, empty_data_folder):
     ]
 
     data_dirs = list(Path(data).iterdir())
+
+    assert len(data_dirs) == 1
+
     most_recent_folder = max(
         data_dirs, key=lambda folder: folder.stat().st_mtime, default=None
     )
+
     yml_count = 0
+
     wav_count = 0
+
     for filename in Path(most_recent_folder).iterdir():
         if filename.suffix == ".yml":
             yml_count += 1
@@ -142,6 +153,10 @@ def test_cli_run_custom_replace(folders, empty_data_folder):
 
     dictstr = '\'{"Recording":{"length_s":2}}\''
 
+    data_dirs = list(Path(data).iterdir())
+
+    assert len(data_dirs) == 0
+
     result = runner.invoke(cli.run, f"--cfg={path} --replace={dictstr}")
 
     assert result.exit_code == 0
@@ -151,6 +166,10 @@ def test_cli_run_custom_replace(folders, empty_data_folder):
     most_recent_folder = max(
         data_dirs, key=lambda folder: folder.stat().st_mtime, default=None
     )
+
+    assert len(data_dirs) == 1
+
+    assert len(list(most_recent_folder.iterdir())) == 5
 
     yml_count = 0
 
@@ -165,4 +184,5 @@ def test_cli_run_custom_replace(folders, empty_data_folder):
 
     # check output
     assert yml_count == 1
+
     assert wav_count == 4

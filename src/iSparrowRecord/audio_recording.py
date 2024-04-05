@@ -171,12 +171,18 @@ class Recorder(RecorderBase):
 
             if self.mode == "record":
 
-                # while True:
-                while stop_condition(self) is False and self.stream.is_active():
+                # README: this should not be different from while stop_condition is False:, but the latter leads to random additional files being recorded
+                while True:
+
+                    # always get the recording, but throw away the data when the stop condition is met at the beginning
+                    should_stop = stop_condition(self)
 
                     filename = datetime.now().strftime(self.filename_format) + ".wav"
 
                     _, frames = self.stream_audio()
+
+                    if should_stop is True:
+                        break
 
                     with wave.open(
                         str(Path(self.output_folder) / filename), "wb"
@@ -285,7 +291,6 @@ class Recorder(RecorderBase):
         Returns:
            Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
         """
-        print(cfg.keys())
         if "output_folder" not in cfg["Output"]:
             raise ValueError("Output folder must be given in config node for recorder.")
 
