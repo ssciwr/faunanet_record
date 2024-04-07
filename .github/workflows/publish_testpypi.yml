@@ -1,4 +1,6 @@
 # based on: https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+# FIXME: doesn't really work, and should be based on existing workflow
+
 name: Publish to testPyPI
 
 on:
