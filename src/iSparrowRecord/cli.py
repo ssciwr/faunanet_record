@@ -16,7 +16,7 @@ def cli():
 
 @cli.command()
 @click.argument("cfg", type=str)
-def install(cfg: str):
+def set_up(cfg: str):
     sus.set_up(cfg)
 
 
