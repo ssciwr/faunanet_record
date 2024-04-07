@@ -26,10 +26,10 @@ RUN python3 -m pip install .
 # change folder to home again
 WORKDIR /iSparrow
 
-# create mount point for host directory
-RUN mkdir -p /iSparrow_data
-VOLUME /iSparrow_data
+RUN python3 /iSparrow/iSparrowRecord/scripts/run.py set-up /iSparrow/iSparrowRecord/config/install_docker.yml
 
+# create mount point for host directory
+VOLUME /iSparrow/iSparrow_data
 
 # set default command to run when container starts
 CMD ["python", "/iSparrow/iSparrowRecord/scripts/run.py"]
