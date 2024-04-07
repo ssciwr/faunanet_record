@@ -32,4 +32,4 @@ RUN python3 /iSparrow/iSparrowRecord/scripts/run.py set-up /iSparrow/iSparrowRec
 VOLUME /iSparrow/iSparrow_data
 
 # set default command to run when container starts
-CMD ["python", "/iSparrow/iSparrowRecord/scripts/run.py"]
+CMD ["/iSparrow/iSparrowRecord/scripts/run.py", "cmd"]

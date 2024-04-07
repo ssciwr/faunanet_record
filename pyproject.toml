@@ -14,7 +14,7 @@ classifiers = [
     "Operating System :: Linux",
     "License :: OSI Approved :: Apache License",
 ]
-keywords = ["sparrow", "soundrecording", "pyaudio"]
+keywords = ["isparrow", "soundrecording", "pyaudio"]
 
 dependencies = [
     "numpy",
