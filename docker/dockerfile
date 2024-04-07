@@ -26,7 +26,7 @@ RUN python3 -m pip install .
 # change folder to home again
 WORKDIR /iSparrow
 
-RUN python3 /iSparrow/iSparrowRecord/scripts/run.py set-up /iSparrow/iSparrowRecord/config/install_docker.yml
+RUN python3 /iSparrow/iSparrowRecord/scripts/run.py set-up /iSparrow/iSparrowRecord/docker
 
 # create mount point for host directory
 VOLUME /iSparrow/iSparrow_data
