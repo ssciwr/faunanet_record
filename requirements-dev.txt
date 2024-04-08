@@ -1,6 +1,12 @@
-sphinx
-myst-parser
 pytest
-pytest-cov 
-coverage
+pytest-cov
+nbval
+librosa
 pre-commit
+ipykernel
+nbsphinx
+nbsphinx-link
+sphinx
+sphinx_mdinclude
+sphinx_rtd_theme
+myst-parser
