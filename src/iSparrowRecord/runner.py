@@ -175,7 +175,7 @@ class Runner:
         except Exception as e:
             print("An error occured during recorder creation with the config: ",  self.config)
             
-            print(_get_devices())
+            print(self._get_devices())
 
             raise e 
 
