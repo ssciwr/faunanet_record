@@ -134,7 +134,10 @@ class Recorder(RecorderBase):
 
         self.p = pyaudio.PyAudio()
 
-        self.input_device_index = input_device_index
+        if input_device_index == None: 
+            self.input_device_index = self.p.get_default_input_device_info()['index']
+        else: 
+            self.input_device_index = input_device_index
 
         self.stream = self.p.open(
             format=pyaudio.paInt16,
