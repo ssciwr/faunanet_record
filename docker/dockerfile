@@ -44,6 +44,10 @@ VOLUME /iSparrow/data
 # create mount point for host directory to put custom config files in
 VOLUME /iSparrow/config
 
+# mount the audio device folder so we have access to the hosts audio devices. 
+# Does only work on linux systems
+VOLUME /dev/snd
+
 # set default command to run when container starts
-# ENTRYPOINT ["iSparrowRecord"]
-ENTRYPOINT ["/bin bash"]
+ENTRYPOINT ["iSparrowRecord"]
+# ENTRYPOINT ["/bin bash"]
