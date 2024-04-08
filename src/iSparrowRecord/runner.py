@@ -173,7 +173,7 @@ class Runner:
 
             # run until time has passed
             print(
-                "start collecting data for ",
+                "... ...collecting data for ",
                 self.end_time,
                 " seconds with ",
                 self.recorder.length_in_s,
