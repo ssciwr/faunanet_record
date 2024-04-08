@@ -9,7 +9,7 @@ def test_cli_install(folders, empty_data_folder):
 
     runner = CliRunner()
 
-    result_install = runner.invoke(cli.install, str(Path(custom_cfg)))
+    result_install = runner.invoke(cli.set_up, str(Path(custom_cfg)))
 
     assert result_install.exit_code == 0
 
@@ -23,7 +23,7 @@ def test_cli_install(folders, empty_data_folder):
         "",
     ]
 
-    result_install_failed = runner.invoke(cli.install, "nonexistant")
+    result_install_failed = runner.invoke(cli.set_up, "nonexistant")
 
     assert result_install_failed.exit_code == 1
 
