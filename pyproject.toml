@@ -14,16 +14,19 @@ classifiers = [
     "Operating System :: Linux",
     "License :: OSI Approved :: Apache License",
 ]
-keywords = ["sparrow", "soundrecording", "pyaudio"]
+keywords = ["isparrow", "soundrecording", "pyaudio"]
+dependencies = ["PyYAML", "wave", "pyaudio", "platformdirs", "click"]
 
-dependencies = [
-    "numpy",
-    "librosa",
-    "PyYAML",
-    "wave",
-    "pyaudio",
-    "platformdirs",
-    "click",
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "nbval", "librosa", "pre-commit"]
+docs = [
+    "ipykernel",
+    "nbsphinx",
+    "nbsphinx-link",
+    "sphinx",
+    "sphinx_mdinclude",
+    "sphinx_rtd_theme",
+    "myst-parser"
 ]
 
 [project.urls]
@@ -37,4 +40,5 @@ build-backend = "setuptools.build_meta"
 [project.scripts]
 iSparrowRecord = "iSparrowRecord.cli:cli"
 
-# add additional stuff when needed, poetry support?
+[tool.pytest.ini_options]
+testpaths = ["tests"]

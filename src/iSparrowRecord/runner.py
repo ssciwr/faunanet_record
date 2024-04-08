@@ -7,6 +7,7 @@ from time import sleep
 
 from .audio_recording import Recorder
 from .utils import update_dict_recursive
+import pyaudio
 
 
 class Runner:
@@ -109,6 +110,7 @@ class Runner:
         """
         return (datetime.now() + timedelta(seconds=1)).replace(microsecond=0)
 
+
     def __init__(self, custom_config: dict = {}):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
@@ -154,8 +156,9 @@ class Runner:
 
         # create recorder
         self.recorder = Recorder(
-            output_folder=str(folderpath), **self.config["Recording"]
-        )
+                output_folder=str(folderpath), **self.config["Recording"]
+            )
+
 
     def run(self):
         """
@@ -173,7 +176,7 @@ class Runner:
 
             # run until time has passed
             print(
-                "start collecting data for ",
+                "... ...collecting data for ",
                 self.end_time,
                 " seconds with ",
                 self.recorder.length_in_s,
