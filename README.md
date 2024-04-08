@@ -7,7 +7,8 @@ tbd
 tbd 
 
 ## Run in docker 
-`docker run -v ~/iSparrow_data:/iSparrow/iSparrow_data -v ~/iSparrow_config:/iSparrow/iSparrow_config 'container_name'`
+
+`docker run -v /path/to/host_data_folder:/iSparrow/iSparrow_data -v /path/to/host/config/folder:/iSparrow/iSparrow_config --device=/dev/snd:/dev/snd 'container_name'`
 
 ## Installation 
 tbd 
