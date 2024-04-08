@@ -110,20 +110,6 @@ class Runner:
         """
         return (datetime.now() + timedelta(seconds=1)).replace(microsecond=0)
 
-    def _get_devices(self): 
-        """
-        _get_devices Get a list of available sound devices that is printed to standard output.
-        """
-        p = pyaudio.PyAudio()
-        
-        num_devices = p.get_device_count()
-
-        for i in range(num_devices):
-            device_info = p.get_device_info_by_index(i)
-            print(f"Device {i}: {device_info['name']}")
-
-        p.terminate()
-    
 
     def __init__(self, custom_config: dict = {}):
         """
@@ -169,16 +155,10 @@ class Runner:
                 yaml.safe_dump(self.config, outfile)
 
         # create recorder
-        try: 
-            self.recorder = Recorder(
+        self.recorder = Recorder(
                 output_folder=str(folderpath), **self.config["Recording"]
             )
-        except Exception as e:
-            print("An error occured during recorder creation with the config: ",  self.config)
-            
-            print(self._get_devices())
 
-            raise e 
 
     def run(self):
         """

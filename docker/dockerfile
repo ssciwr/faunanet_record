@@ -50,4 +50,3 @@ VOLUME /dev/snd
 
 # set default command to run when container starts
 ENTRYPOINT ["iSparrowRecord"]
-# ENTRYPOINT ["/bin bash"]
