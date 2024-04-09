@@ -11,7 +11,6 @@ OUTPUT = None
 
 # README: the below will later land in setup.py...
 def read_yaml(path: str):
-    print(f"...reading config from {path}")
     """
         read_yaml Read the yaml basic config file for iSparrow from path.
                 It contains the install directory, data directory and other things used
@@ -49,7 +48,6 @@ def make_directories(base_cfg_dirs: dict):
     Returns:
         tuple: created folders: (isparrow-homefolder, modelsfolder, datafolder, outputfolder, examplefolder)
     """
-    print("...Making direcotries...")
     if "home" not in base_cfg_dirs:
         raise KeyError("The home folder for iSparrow must be given in the base config")
 
@@ -74,7 +72,6 @@ def make_directories(base_cfg_dirs: dict):
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
 @pytest.fixture(scope="session", autouse=True)
 def install(request):
-    print("Creating iSparrow folders and downloading data... ")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
 
@@ -90,16 +87,6 @@ def install(request):
     HOME = home
     DATA = data
     OUTPUT = output
-
-    print("Installation finished, check audio devices: ")
-
-    p = pyaudio.PyAudio()
-
-    n = p.get_device_count()
-
-    for i in range(n):
-        info = p.get_device_info_by_index(i)
-        print(f"Device {i}: {info['name']}")
 
     # remove again after usage
     def teardown():
