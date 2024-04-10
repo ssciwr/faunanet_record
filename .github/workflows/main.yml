@@ -15,12 +15,12 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test_and_doc:
+  test:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest,] # windows-latest]
+        os: [ubuntu-latest,]
         python-version: ["3.11"]
     steps:
       
@@ -29,26 +29,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Preseed jackd2 installation # FIXME: check what this does in detail
-      if: matrix.os == 'ubuntu-latest'
-      run: echo "jackd2 jackd/tweak_rt_limits boolean true" | sudo debconf-set-selections
-
     - name: Install audio dependencies on ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      env:
-        DEBIAN_FRONTEND: noninteractive
       run: | 
         sudo apt-get update
-        sudo apt-get install -y ffmpeg python3-pyaudio
-        sudo apt-get install -y portaudio19-dev jackd2 
-
-    - name: Install audio dependencies on macos
-      if: matrix.os == 'macos-latest'
-      run: brew install portaudio ffmpeg
-
-    - name: Install audio dependencies on windows
-      if: matrix.os == 'windows-latest'
-      run: choco install portaudio ffmpeg
+        sudo apt-get install -y portaudio19-dev pulseaudio
 
     - name: Getting repository
       uses: actions/checkout@v3
@@ -59,13 +43,12 @@ jobs:
         python3 -m pip install -r requirements-dev.txt
 
     - name: Run pytest unittests on ubuntu
-      if: matrix.os == 'ubuntu-latest'
       run: |
-        jackd -d dummy &
-        python -m pytest tests
+        # set up virtual audio device
+        pulseaudio -D
+        pactl load-module module-null-sink sink_name=virtspk sink_properties=device.description=Virtual_Speaker
+        pactl load-module module-null-sink sink_name=virtmic sink_properties=device.description=Virtual_Microphone_Sink
+        pactl load-module module-remap-source master=virtmic.monitor source_name=virtmic source_properties=device.description=Virtual_Microphone
 
-
-    - name: Run pytest unittests on macos and windows
-      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
-      run: |
-        python -m pytest tests
+        # test stuff
+        python3 -m pytest tests

@@ -1,0 +1,11 @@
+Directories: 
+  home: ~/iSparrow 
+  data: ~/iSparrow_data
+  output: ~/iSparrow_output
+Data:
+  Recording:
+    sample_rate: 48000
+    length_s: 3
+    channels: 1
+    mode: "record"
+
