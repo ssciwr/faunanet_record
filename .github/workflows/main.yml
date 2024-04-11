@@ -43,7 +43,6 @@ jobs:
         python3 -m pip install -r requirements-dev.txt
 
     - name: Run pytest unittests on ubuntu
-      if: matrix.os == 'ubuntu-latest'
       run: |
         # set up virtual audio device
         pulseaudio -D
