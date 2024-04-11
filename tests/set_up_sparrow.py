@@ -77,7 +77,7 @@ def set_up():
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
 
-    cfg_path = Path(__file__).resolve().parent / "config"
+    cfg_path = Path(__file__).resolve().parent.parent / "config"
 
     install_cfg = "install.yml"
 

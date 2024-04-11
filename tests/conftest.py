@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).parent))
 import pytest
 import shutil
 import yaml
-import set_up_fake_sparrow as spf
+import set_up_sparrow as spf
 
 HOME = None
 DATA = None
@@ -41,9 +41,7 @@ def install(request):
 
 @pytest.fixture(scope="module")
 def folders():
-    custom_cfgdir = (
-        Path(__file__).resolve().parent.parent / Path("config")
-    )
+    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
     global HOME, DATA, OUTPUT, CONFIG
     return str(HOME), str(DATA), str(OUTPUT), str(CONFIG), str(custom_cfgdir)
 

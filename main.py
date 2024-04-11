@@ -1,5 +1,5 @@
 from pathlib import Path
-from set_up_fake_sparrow import set_up
+from set_up_sparrow import set_up
 
 from iSparrowRecord import Runner
 
