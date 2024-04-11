@@ -175,7 +175,7 @@ class Recorder(RecorderBase):
                 while stop_condition(self) is False and self.stream.is_active():
 
                     filename = datetime.now().strftime(self.filename_format) + ".wav"
-                    print(filename)
+
                     _, frames = self.stream_audio()
 
                     with wave.open(
@@ -285,7 +285,7 @@ class Recorder(RecorderBase):
         Returns:
            Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
         """
-        print(cfg.keys())
+
         if "output_folder" not in cfg["Output"]:
             raise ValueError("Output folder must be given in config node for recorder.")
 
