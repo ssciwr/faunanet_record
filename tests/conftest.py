@@ -33,7 +33,6 @@ def install(request):
     def teardown():
         shutil.rmtree(str(DATA))
         shutil.rmtree(str(OUTPUT))
-        shutil.rmtree(str(CONFIG))
 
     request.addfinalizer(teardown)
 
