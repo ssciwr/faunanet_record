@@ -31,7 +31,6 @@ def install(request):
     # remove again after usage
 
     def teardown():
-        shutil.rmtree(str(HOME))
         shutil.rmtree(str(DATA))
         shutil.rmtree(str(OUTPUT))
         shutil.rmtree(str(CONFIG))
