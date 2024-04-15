@@ -45,7 +45,7 @@ class RecorderBase(ABC):
         """
         self.length_in_s = length_s
         self.sample_rate = sample_rate
-        self.output_folder = output_folder
+        self.output_folder = str(Path(output_folder).expanduser())
         self.file_type = file_type
         self.channels = channels
         self.num_format = num_format
@@ -81,7 +81,8 @@ class Recorder(RecorderBase):
     start(stop_condition = lambda x: False): Make the caller start generate data. Runs until 'stop_condition(self)' returns True.
     stream_audio(): Get a chunk of recorded data corresponding to 'length_in_s' seconds of recording.
     stop(): Stop recorder and release held resources of PyAudio.
-
+    from_cfg(cfg) (classmethod): Build a new instance of this class from a dictionary, usually obtained by reading a yaml config
+    is_running(): check if the pyaudio stream held by the caller is still active.
     """
 
     def __init__(
@@ -119,7 +120,7 @@ class Recorder(RecorderBase):
                     "Output folder for recording object cannot be None in 'record' mode"
                 )
 
-            self.filename_format = "%y%m%d_%H%M%S.wav"
+            self.filename_format = "%y%m%d_%H%M%S"
 
         super().__init__(
             output_folder=output_folder,
@@ -173,7 +174,7 @@ class Recorder(RecorderBase):
                 # while True:
                 while stop_condition(self) is False and self.stream.is_active():
 
-                    filename = datetime.now().strftime(self.filename_format)
+                    filename = datetime.now().strftime(self.filename_format) + ".wav"
 
                     _, frames = self.stream_audio()
 
@@ -285,11 +286,9 @@ class Recorder(RecorderBase):
            Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
         """
 
-        if "output_folder" not in cfg:
+        if "output_folder" not in cfg["Output"]:
             raise ValueError("Output folder must be given in config node for recorder.")
 
-        folder = Path(cfg["output_folder"]).expanduser()
+        folder = Path(cfg["Output"]["output_folder"]).expanduser()
 
-        cfg["output_folder"] = folder
-
-        return cls(**cfg)
+        return cls(folder, **cfg["Recording"])
