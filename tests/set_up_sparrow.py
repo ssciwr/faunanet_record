@@ -33,7 +33,7 @@ def read_yaml(path: str):
     return base_cfg
 
 
-def make_directories(base_cfg_dirs: dict):
+def make_directories(base_cfg_dirs: dict, for_tests: bool = False):
     """
     make_directories Make all the directories for sparrow.
 
@@ -65,6 +65,12 @@ def make_directories(base_cfg_dirs: dict):
     isd = Path(base_cfg_dirs["data"]).expanduser().resolve()
     iso = Path(base_cfg_dirs["output"]).expanduser().resolve()
     isc = Path(user_config_dir("iSparrowRecord")).expanduser().resolve()
+
+    if for_tests:
+        iso = iso / "tests"
+        isd = isd / "tests"
+        isc = isc / "tests"
+
     for p in [ish, isd, iso, isc]:
         p.mkdir(parents=True, exist_ok=True)
 
@@ -72,7 +78,7 @@ def make_directories(base_cfg_dirs: dict):
 
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
-def set_up():
+def set_up(for_tests: bool = False):
     print("Creating iSparrow folders and downloading data... ")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
@@ -84,7 +90,9 @@ def set_up():
     print("using install config", cfg_path / Path(install_cfg))
     cfg = read_yaml(cfg_path / Path(install_cfg))
 
-    home, data, output, config = make_directories(cfg["Directories"])
+    home, data, output, config = make_directories(
+        cfg["Directories"], for_tests=for_tests
+    )
 
     shutil.copy(cfg_path / Path(install_cfg), config)
 
