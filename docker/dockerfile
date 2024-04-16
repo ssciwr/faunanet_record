@@ -1,0 +1,52 @@
+FROM python:3.11-slim
+
+# set workdir in container 
+RUN mkdir -p /iSparrow
+WORKDIR /iSparrow
+
+# get python package from github, build and install 
+
+## install git
+RUN apt-get update && apt-get install -y git
+
+# install portaudio 
+RUN apt-get install -y libportaudio2 libportaudiocpp0 portaudio19-dev libasound-dev libsndfile1-dev build-essential alsa-utils
+
+# clone repo README: could later be installed from pip, or install directly from repo
+RUN cd /iSparrow && git clone https://github.com/ssciwr/iSparrowRecord.git
+
+WORKDIR /iSparrow/iSparrowRecord
+
+# temporary checkout step
+RUN git checkout -b 18-dockerize-isparrowdata origin/18-dockerize-isparrowdata && git pull 
+
+# install package 
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install . 
+
+# change folder to home again
+WORKDIR /iSparrow
+
+RUN mkdir -p /iSparrow/data
+RUN mkdir -p /iSparrow/config
+
+RUN iSparrowRecord set-up /iSparrow/iSparrowRecord/docker
+
+# delete repo again to reduce container size
+RUN rm -rf /iSparrow/iSparrowRecord
+
+# remove build dependency to reduce container size
+RUN apt remove -y build-essential 
+
+# create mount point for host directory for recorded data
+VOLUME /iSparrow/data
+
+# create mount point for host directory to put custom config files in
+VOLUME /iSparrow/config
+
+# mount the audio device folder so we have access to the hosts audio devices. 
+# Does only work on linux systems
+VOLUME /dev/snd
+
+# set default command to run when container starts
+ENTRYPOINT ["iSparrowRecord"]

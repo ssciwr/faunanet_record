@@ -1,5 +1,5 @@
 Output: 
-  output_folder:  ~/iSparrow_data
+  output_folder:  /iSparrow/iSparrow_data
   runtime: 9 # for security: run with default should not run forever
   # run_until: 2024-04-04_12:05:24  # format: "%Y-%m-%d_%H:%M:%S"
   dump_config: True

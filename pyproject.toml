@@ -1,33 +1,44 @@
 [project]
 name = "iSparrowRecord"
-version = "0.1"
-requires-python = ">= 3.10"
-authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
+version = "0.5"
+requires-python = ">= 3.8"
+authors = [
+    { name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de" },
+    { name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de" },
+]
 description = "Audio Recording Facilities for the iSparrow package"
-readme ="README.md"
-license={file = "LICENSE"}
+readme = "README.md"
+license = { file = "LICENSE" }
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+    "Operating System :: Linux",
     "License :: OSI Approved :: Apache License",
 ]
+keywords = ["isparrow", "soundrecording", "pyaudio"]
+dependencies = ["PyYAML", "wave", "pyaudio", "platformdirs", "click"]
 
-dependencies = [
-    "numpy", 
-    "librosa", 
-    "PyYAML", 
-    "wave", 
-    "pyaudio"
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "nbval", "librosa", "pre-commit"]
+docs = [
+    "ipykernel",
+    "nbsphinx",
+    "nbsphinx-link",
+    "sphinx",
+    "sphinx_mdinclude",
+    "sphinx_rtd_theme",
+    "myst-parser"
 ]
-
 
 [project.urls]
 Repository = "https://github.com/ssciwr/iSparrowRecord"
+Issues = "https://github.com/ssciwr/iSparrowRecord/issues"
 
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>61.0"]
 build-backend = "setuptools.build_meta"
 
+[project.scripts]
+iSparrowRecord = "iSparrowRecord.cli:cli"
 
-
-# add additional stuff when needed, poetry support? 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
