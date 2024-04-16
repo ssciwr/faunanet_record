@@ -1,32 +1,29 @@
 from iSparrowRecord import Runner
-
+from iSparrowRecord import utils
 from pathlib import Path
-from platformdirs import user_config_dir
-import yaml
+
 import librosa
 
 
-def test_integration(install, folders):
-    _, _, _, _, cfgdir = folders
+def test_integration(folders, empty_data_folder):
+    _, _, cfgdir = folders
 
-    install_filepath = Path(user_config_dir("iSparrowRecord")) / "install.yml"
-    with open(install_filepath, "r") as cfgfile:
-        sparrow_config = yaml.safe_load(cfgfile)
+    config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
-    runner = Runner(Path(cfgdir) / "custom_example.yml")
+    runner = Runner(config)
+    assert (
+        len(list(Path(runner.output_path).expanduser().iterdir())) == 1
+    )  # config output is there
 
     runner.run()
 
-    assert (
-        len(list(Path(sparrow_config["Directories"]["data"]).expanduser().iterdir()))
-        == 3
-    )
+    assert len(list(Path(runner.output_path).expanduser().iterdir())) == 3
 
     yaml_count = 0
     wav_count = 0
     unknown_count = 0
 
-    for filename in Path(sparrow_config["Directories"]["data"]).expanduser().iterdir():
+    for filename in Path(runner.output_path).iterdir():
         if filename.suffix == ".yml":
             yaml_count += 1
 
@@ -34,7 +31,7 @@ def test_integration(install, folders):
             wav_count += 1
 
             data, rate = librosa.load(
-                Path(sparrow_config["Directories"]["data"]).expanduser() / filename,
+                Path(runner.output_path) / filename,
                 sr=32000,
                 res_type="kaiser_fast",
             )

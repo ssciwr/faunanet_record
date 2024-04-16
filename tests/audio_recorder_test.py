@@ -10,7 +10,7 @@ def test_audio_recorder_creation(
     folders,
     audio_recorder_fx,
 ):
-    _, DATA, _, _, _ = folders
+    _, DATA, _ = folders
 
     _, cfg = audio_recorder_fx
 
@@ -33,7 +33,7 @@ def test_audio_functionality_record_mode(
     folders,
     audio_recorder_fx,
 ):
-    _, DATA, _, _, _ = folders
+    _, DATA, _ = folders
 
     _, cfg = audio_recorder_fx
 

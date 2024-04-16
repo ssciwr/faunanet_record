@@ -16,14 +16,7 @@ def cli():
 
 @cli.command()
 @click.argument("cfg", type=str)
-def set_up(cfg: str):
-    """
-    set_up Call the setup function of the project. Reads parameters (folder locations)
-    from a config file, creates them and copies the default configuration into the standard config folder of you system under 'iSparrowRecord'.
-
-    Args:
-        cfg (str): Set up configuration to use.
-    """
+def install(cfg: str):
     sus.set_up(cfg)
 
 
@@ -36,21 +29,8 @@ def set_up(cfg: str):
     default="{}",
 )
 def run(cfg: str, debug: bool, replace: dict):
-    """
-    run Create a runner object and record data using parameters read from a config file.
-
-    Args:
-        cfg (str): Config file to use.
-        debug (bool): _description_
-        replace (dict): Dictionary to replace elements of the given config with. Useful for debugging, trying things out, or for quick changes without having to create a new config file.
-
-    Raises:
-        FileNotFoundError: When there is not install config file in the user's config folder.
-        FileNotFoundError: When no data folder has been found.
-    """
-
     # raise warning that no logging is there yet
-    print("Setting up data collection procedure")
+    print("start data collection")
     if debug:
         warnings.warn(
             "Debug output currently not yet implemented. Will run, but without any debug output."
@@ -82,7 +62,7 @@ def run(cfg: str, debug: bool, replace: dict):
     if cfg != "":
         custom_filepath = Path(cfg).expanduser()
 
-        print("...using custom run config: ", custom_filepath)
+        print("... ...using custom run config: ", custom_filepath)
 
         custom_cfg = read_yaml(custom_filepath)
 
@@ -97,5 +77,4 @@ def run(cfg: str, debug: bool, replace: dict):
     print("...creating runner")
     runner = Runner(custom_cfg)
 
-    print("...running data collection")
     runner.run()

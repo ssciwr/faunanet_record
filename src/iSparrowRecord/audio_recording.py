@@ -285,7 +285,6 @@ class Recorder(RecorderBase):
         Returns:
            Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
         """
-
         if "output_folder" not in cfg["Output"]:
             raise ValueError("Output folder must be given in config node for recorder.")
 
