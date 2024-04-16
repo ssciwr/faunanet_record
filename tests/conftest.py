@@ -13,11 +13,11 @@ CONFIG = None
 def install(request):
     custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
 
-    spf.set_up(custom_cfgdir)
+    spf.set_up(custom_cfgdir, for_tests=True)
 
     global DATA, CONFIG
-    DATA = spf.SPARROW_RECORD_DATA
-    CONFIG = spf.SPARROW_RECORD_CONFIG
+    DATA = spf.DATA
+    CONFIG = spf.CONFIG
 
     # remove again after usage
 

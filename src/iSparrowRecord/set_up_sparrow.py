@@ -3,11 +3,11 @@ from pathlib import Path
 from platformdirs import user_config_dir
 from .utils import read_yaml
 
-SPARROW_RECORD_DATA = None
-SPARROW_RECORD_CONFIG = None
+DATA = None
+CONFIG = None
 
 
-def make_directories(base_cfg_dirs: dict):
+def make_directories(base_cfg_dirs: dict, for_tests: bool = False):
     """
     make_directories Make all the directories for sparrow.
 
@@ -23,13 +23,25 @@ def make_directories(base_cfg_dirs: dict):
     Returns:
         tuple: created folders: (isparrow-homefolder, modelsfolder, datafolder, outputfolder, examplefolder)
     """
-    print("...making directories")
+    print("...Making direcotries...")
+    if "home" not in base_cfg_dirs:
+        raise KeyError("The home folder for iSparrow must be given in the base config")
 
     if "data" not in base_cfg_dirs:
         raise KeyError("The data folder for iSparrow must be given in the base config")
 
+    if "output" not in base_cfg_dirs:
+        raise KeyError(
+            "The output folder for iSparrow must be given in the base config"
+        )
+
     isd = Path(base_cfg_dirs["data"]).expanduser().resolve()
     isc = Path(user_config_dir("iSparrowRecord")).expanduser().resolve()
+
+    if for_tests:
+        isd = isd / "tests"
+        isc = isc / "tests"
+
     for p in [isd, isc]:
         p.mkdir(parents=True, exist_ok=True)
 
@@ -37,24 +49,26 @@ def make_directories(base_cfg_dirs: dict):
 
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
-def set_up(
-    cfg_path: str,
-):
-    print("Creating iSparrow folders and downloading data")
+def set_up(for_tests: bool = False):
+    print("Creating iSparrow folders and downloading data... ")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
 
-    print("...using install config", cfg_path)
-    cfg = read_yaml(Path(cfg_path) / "install.yml")
+    cfg_path = Path(__file__).resolve().parent.parent / "config"
 
-    data, config = make_directories(cfg["Directories"])
+    install_cfg = "install.yml"
 
-    shutil.copy(Path(cfg_path) / "install.yml", config)
+    print("using install config", cfg_path / Path(install_cfg))
+    cfg = read_yaml(cfg_path / Path(install_cfg))
 
-    shutil.copy(Path(cfg_path) / "default.yml", config)
+    data, config = make_directories(cfg["Directories"], for_tests=for_tests)
 
-    global SPARROW_RECORD_DATA, SPARROW_RECORD_CONFIG
-    SPARROW_RECORD_DATA = data
-    SPARROW_RECORD_CONFIG = config
+    shutil.copy(cfg_path / Path(install_cfg), config)
+
+    shutil.copy(cfg_path / Path("default.yml"), config)
+
+    global DATA, CONFIG
+    DATA = data
+    CONFIG = config
 
     print("Installation finished")
