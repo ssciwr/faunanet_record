@@ -16,8 +16,7 @@ def test_cli_install(folders, empty_data_folder):
     output = result_install.output.split("\n")
 
     assert output == [
-        "Creating iSparrow folders and downloading data",
-        f"...using install config {custom_cfg}",
+        "Creating iSparrow folders and downloading data...",
         "...making directories",
         "Installation finished",
         "",
@@ -27,25 +26,19 @@ def test_cli_install(folders, empty_data_folder):
 
     assert result_install_failed.exit_code == 1
 
-    output = result_install_failed.output.split("\n")
-    assert output == [
-        "Creating iSparrow folders and downloading data",
-        "...using install config nonexistant",
-        "",
-    ]
-
-    assert type(result_install_failed.exception) is FileNotFoundError
+    assert type(result_install_failed.exception) is ValueError
     assert result_install_failed.exception.args == (
-        "The folder nonexistant/install.yml does not exist",
+        "Given directory for install configs not defined",
     )
 
 
 def test_cli_run_default(folders, empty_data_folder):
     _, data, _ = folders
+    print("datafolder: ", data)
 
     runner = CliRunner()
 
-    result = runner.invoke(cli.run)
+    result = runner.invoke(cli.run, "--defaults='~/.config/iSparrowRecord/tests'")
 
     # make sure things ran smoothly
     assert result.exit_code == 0
@@ -73,12 +66,14 @@ def test_cli_run_debug(empty_data_folder):
     runner = CliRunner()
 
     with pytest.warns(UserWarning) as warning_info:
-        result = runner.invoke(cli.run, "--debug")
+        result = runner.invoke(
+            cli.run, "--debug --defaults='~/.config/iSparrowRecord/tests'"
+        )
 
     assert result.exit_code == 0
 
     res = result.output.split("\n")
-    print(res)
+
     assert res == [
         "start data collection",
         "...preparing config",
@@ -100,7 +95,9 @@ def test_cli_run_custom(folders, empty_data_folder):
 
     path = str(Path(cfgdir) / "custom_example.yml")
 
-    result = runner.invoke(cli.run, f"--cfg={path}")
+    result = runner.invoke(
+        cli.run, f"--cfg={path} --defaults='~/.config/iSparrowRecord/tests'"
+    )
 
     assert result.exit_code == 0
 
@@ -116,9 +113,11 @@ def test_cli_run_custom(folders, empty_data_folder):
     ]
 
     data_dirs = list(Path(data).iterdir())
+
     most_recent_folder = max(
         data_dirs, key=lambda folder: folder.stat().st_mtime, default=None
     )
+
     yml_count = 0
     wav_count = 0
     for filename in Path(most_recent_folder).iterdir():
@@ -142,7 +141,10 @@ def test_cli_run_custom_replace(folders, empty_data_folder):
 
     dictstr = '\'{"Recording":{"length_s":2}}\''
 
-    result = runner.invoke(cli.run, f"--cfg={path} --replace={dictstr}")
+    result = runner.invoke(
+        cli.run,
+        f"--cfg={path} --replace={dictstr} --defaults='~/.config/iSparrowRecord/tests'",
+    )
 
     assert result.exit_code == 0
 

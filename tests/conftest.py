@@ -2,25 +2,28 @@ from pathlib import Path
 import pytest
 import shutil
 import yaml
-from iSparrowRecord import set_up_sparrow as spf
+import iSparrowRecord.set_up as spf
 
 DATA = None
 CONFIG = None
 
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(autouse=True)
 def install(request):
-    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
+    custom_cfgdir = (
+        Path(__file__).resolve().parent.parent / Path("tests") / "test_configs"
+    )
 
-    spf.set_up(custom_cfgdir, for_tests=True)
+    spf.set_up(
+        cfg_path=str(custom_cfgdir),
+    )
 
     global DATA, CONFIG
     DATA = spf.DATA
     CONFIG = spf.CONFIG
 
     # remove again after usage
-
     def teardown():
         shutil.rmtree(str(DATA))
         shutil.rmtree(str(CONFIG))
@@ -41,7 +44,7 @@ def empty_data_folder(request):
 
 @pytest.fixture()
 def folders():
-    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
+    custom_cfgdir = Path(__file__).resolve().parent / Path("test_configs")
     global DATA, CONFIG
     return str(CONFIG), str(DATA), str(custom_cfgdir)
 

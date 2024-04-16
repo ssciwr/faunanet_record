@@ -1,6 +1,6 @@
 from .utils import read_yaml, update_dict_recursive, dict_from_string
 from .runner import Runner
-from . import set_up_sparrow as sus
+from . import set_up as sus
 
 from pathlib import Path
 import warnings
@@ -24,11 +24,16 @@ def install(cfg: str):
 @click.option("--cfg", help="custom configuration file", default="")
 @click.option("--debug", help="Enable debug output", is_flag=True)
 @click.option(
+    "--defaults",
+    help="Path to where the install and default configs are",
+    default=str(user_config_dir("iSparrowRecord")),
+)
+@click.option(
     "--replace",
     help="Replace any entry in the config with a different value. Mostly useful for debugging or testing purposes.",
     default="{}",
 )
-def run(cfg: str, debug: bool, replace: dict):
+def run(cfg: str, debug: bool, replace: str, defaults: str):
     # raise warning that no logging is there yet
     print("start data collection")
     if debug:
@@ -38,7 +43,7 @@ def run(cfg: str, debug: bool, replace: dict):
 
     print("...preparing config")
 
-    install_path = Path(user_config_dir("iSparrowRecord")) / "install.yml"
+    install_path = Path(defaults).expanduser() / "install.yml"
 
     if install_path.is_file() is False:
         raise FileNotFoundError(
@@ -46,9 +51,7 @@ def run(cfg: str, debug: bool, replace: dict):
         )
 
     # read install file and check if the system has been set up, raise if not
-    install_cfg = read_yaml(
-        str(Path(user_config_dir("iSparrowRecord")) / "install.yml")
-    )
+    install_cfg = read_yaml(str(Path(defaults).expanduser() / "install.yml"))
 
     data_folder = Path(install_cfg["Directories"]["data"]).expanduser()
 
@@ -75,6 +78,6 @@ def run(cfg: str, debug: bool, replace: dict):
         custom_cfg = replace_dict
 
     print("...creating runner")
-    runner = Runner(custom_cfg)
+    runner = Runner(custom_cfg, config_folder=defaults)
 
     runner.run()

@@ -25,7 +25,9 @@ class Runner:
     run Run data collection
     """
 
-    def _process_configs(self, custom_cfg: dict) -> dict:
+    def _process_configs(
+        self, custom_cfg: dict, config_folder: str = user_config_dir("iSparrowRecord")
+    ) -> dict:
         """
         _process_configs _summary_
 
@@ -37,9 +39,9 @@ class Runner:
         """
 
         # get config files, then run. Their existence is guaranteed by the install
-        default_filepath = Path(user_config_dir("iSparrowRecord")) / "default.yml"
+        default_filepath = Path(config_folder).expanduser() / "default.yml"
 
-        install_filepath = Path(user_config_dir("iSparrowRecord")) / "install.yml"
+        install_filepath = Path(config_folder).expanduser() / "install.yml"
 
         # get install config for paths
         with open(install_filepath, "r") as cfgfile:
@@ -99,7 +101,11 @@ class Runner:
         else:
             return runtime
 
-    def __init__(self, custom_config: dict = None):
+    def __init__(
+        self,
+        custom_config: dict = None,
+        config_folder: str = user_config_dir("iSparrowRecord"),
+    ):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
                  Merges the updated config with the installation info and dumps everything to the same folder where
@@ -112,7 +118,7 @@ class Runner:
         if custom_config is None:
             custom_config = {}
 
-        self.config = self._process_configs(custom_config)
+        self.config = self._process_configs(custom_config, config_folder=config_folder)
 
         # make new folder for data dumping
         foldername = (
