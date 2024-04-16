@@ -282,9 +282,9 @@ class Recorder(RecorderBase):
         Raises:
             ValueError: When the supplied dictionary does not have an 'output_folder' node.
 
-        Returns:
-           Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
+        Returns: Recorder : A new instance of the `Recorder` class, built with the supplied arguments.
         """
+
         if "output_folder" not in cfg["Output"]:
             raise ValueError("Output folder must be given in config node for recorder.")
 
