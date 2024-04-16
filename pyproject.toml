@@ -19,7 +19,6 @@ dependencies = [
     "wave", 
     "pyaudio",
     "platformdirs", 
-    "click"
 ]
 
 

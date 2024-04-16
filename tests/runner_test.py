@@ -3,7 +3,7 @@ from iSparrowRecord import utils
 from pathlib import Path
 from datetime import datetime
 import pytest
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 
 TEST_CFGS = user_config_dir("iSparrowRecord/tests")
 
