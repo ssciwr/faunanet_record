@@ -29,13 +29,13 @@ class Runner:
         self, custom_cfg: dict, config_folder: str = user_config_dir("iSparrowRecord")
     ) -> dict:
         """
-        _process_configs _summary_
+        _process_configs Make a complete config dictionary that contains all necessary parameters for the runner to work.
 
         Args:
-            custom_cfg (dict): _description_
-
+            custom_cfg (dict): custom dictionary that overrides some of the parameters for the runner.
+            config_folder (optional, str): When given, the folder where iSparrowRecord has stored the default configuration files. Defaults to /path/to/standard/config/folder/iSparrowRecord, e.g., /home/username/.config/iSparrowRecord on linux.
         Returns:
-            dict: _description_
+            dict:  Full configuration for the runner.
         """
 
         # get config files, then run. Their existence is guaranteed by the install
