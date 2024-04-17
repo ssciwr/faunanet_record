@@ -70,7 +70,7 @@ class Runner:
         Returns:
             int or datetime or None: If 'runtime' is given: the number of seconds to collect data.
                                     If 'run_until' is given: the timestamp (accurate to the second)
-                                    until which data shall be collected. If none of both is given:
+                                    until which data shall be collected. If none is given or one is set to "inf":
                                     None, meaning data collection runs indefinitely.
         """
         if "run_until" in config:
@@ -91,6 +91,15 @@ class Runner:
             return runtime
 
         elif run_until is None and runtime is None:
+            warnings.warn(
+                "Warning, runtime limits not given. The recorder will run indefinitely"
+            )
+            return None
+
+        elif run_until == "inf" or runtime == "inf":
+            warnings.warn(
+                "Warning, 'inf' has been found as runtime limit. The recorder will run indefinitely"
+            )
             return None
 
         elif run_until is not None and runtime is None:
@@ -110,12 +119,11 @@ class Runner:
         """
         return (datetime.now() + timedelta(seconds=1)).replace(microsecond=0)
 
-
     def __init__(self, custom_config: dict = {}):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
-                 Merges the updated config with the installation info and dumps everything to the same folder where
-                 the data is recorded to.
+                Merges the updated config with the installation info and dumps everything to the same folder where
+                the data is recorded to.
         Args:
             custom_config (dict, optional): A custom configuration dictionary containing key-value pairs that correspond to arguments used by this class or by the Recorder. Defaults to {}.
             suffix (str, optional): Suffix to add to run folder
@@ -156,9 +164,8 @@ class Runner:
 
         # create recorder
         self.recorder = Recorder(
-                output_folder=str(folderpath), **self.config["Recording"]
-            )
-
+            output_folder=str(folderpath), **self.config["Recording"]
+        )
 
     def run(self):
         """
@@ -189,7 +196,6 @@ class Runner:
 
             while datetime.now() < start:
                 sleep(0.001)
-
             self.recorder.start(lambda x: datetime.now() >= stop)
 
         if isinstance(self.end_time, datetime):
@@ -209,3 +215,11 @@ class Runner:
                 sleep(0.01)
 
             self.recorder.start(lambda x: datetime.now() >= self.end_time)
+
+        if self.end_time is None:
+            print(
+                "start collecting data indefinitely with",
+                self.recorder.length_in_s,
+                "seconds per file",
+            )
+            self.recorder.start(lambda x: False)

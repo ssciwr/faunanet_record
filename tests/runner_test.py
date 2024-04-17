@@ -53,7 +53,6 @@ def test_condition_creation(install, folders):
 
     assert end_time == 8
 
-    del end_time
     cfg["Output"]["run_until"] = "2024-04-04_12:05:24"
 
     with pytest.warns(UserWarning) as warning_info:
@@ -75,6 +74,10 @@ def test_condition_creation(install, folders):
     end_time = runner._process_runtime(cfg["Output"])
     assert end_time is None
 
+    cfg["Output"]["runtime"] = "inf"
+    end_time = runner._process_runtime(cfg["Output"])
+    assert end_time is None
+
 
 def test_runner_creation(install, folders):
     _, _, cfgdir = folders
@@ -90,7 +93,7 @@ def test_runner_creation(install, folders):
     assert "Output" in runner.config
     assert "Recording" in runner.config
     assert runner.output_path == str(
-        Path("~/iSparrow_data").expanduser() / (datetime.now().strftime("%y%m%d_%H%M%S")
-        + "_runner_creation")
+        Path("~/iSparrow_data").expanduser()
+        / (datetime.now().strftime("%y%m%d_%H%M%S") + "_runner_creation")
     )
     assert runner.recorder.is_running is False  # not yet running

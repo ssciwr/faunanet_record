@@ -1,5 +1,5 @@
 Output:
-  runtime: 8
+  runtime: "inf"
   dump_config: True
   data_folder_suffix: "_test"
 Recording:
