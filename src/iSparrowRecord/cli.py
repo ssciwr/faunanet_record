@@ -18,9 +18,9 @@ def cli():
 @click.argument(
     "cfg_dir",
     type=str,
-    help="The directory given must contain 'default.yml' and 'install.yml'. Check out the examples provided to see how to customize them.",
 )
 def install(cfg_dir: str):
+    "The directory given must contain 'default.yml' and 'install.yml'. Check out the defaults provided in the code repository under './config'."
     sus.set_up(cfg_dir)
 
 
