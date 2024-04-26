@@ -30,6 +30,5 @@ Repository = "https://github.com/ssciwr/iSparrowRecord"
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
-
-# add additional stuff when needed, poetry support? 
+[project.scripts]
+iSparrowRecord = "iSparrowRecord.cli:cli"
