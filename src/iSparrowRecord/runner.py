@@ -3,8 +3,10 @@ from pathlib import Path
 from platformdirs import user_config_dir
 from datetime import datetime
 import warnings
-from . import Recorder
 import time
+
+from .audio_recording import Recorder
+from .utils import update_dict_recursive
 
 
 class Runner:
@@ -23,71 +25,39 @@ class Runner:
     run Run data collection
     """
 
-    def _update_dict_recursive(self, base, update):
+    def _process_configs(
+        self, custom_cfg: dict, config_folder: str = user_config_dir("iSparrowRecord")
+    ) -> dict:
         """
-        _update_dict_recursive Merge recursively two arbitrarily nested dictionaries such that only those leaves of 'base' are upated with the content of 'update'
-        for which the given path in 'update' fully exists in 'base'.
-
-        This function assumes that nodes in 'base' are only replaced, and 'update' does not add new nodes.
+        _process_configs Make a complete config dictionary that contains all necessary parameters for the runner to work.
 
         Args:
-            base (dict): Base dictionary to update.
-            update (dict): dictionary to update 'base' with.
-        """
-        # basic assumption: update is a sub-tree of base with unknown entry point.
-        if isinstance(base, dict) and isinstance(update, dict):
-
-            for kb, vb in base.items():
-                if kb in update:
-                    # overlapping element branch found
-                    if isinstance(vb, dict) and isinstance(update[kb], dict):
-                        # follow branch if possible
-                        self._update_dict_recursive(vb, update[kb])
-                    else:
-                        # assign if not
-                        base[kb] = update[kb]
-                else:
-                    self._update_dict_recursive(vb, update)  # find entrypoint
-        else:
-            pass  # not found and no dictionaries - pass
-
-    def _process_configs(self, custom_filepath: str) -> dict:
-        """
-        _process_configs Updates the default config and merges with relevant parts of the install config to have the full parameter set data is collected with available.
-
+            custom_cfg (dict): custom dictionary that overrides some of the parameters for the runner.
+            config_folder (optional, str): When given, the folder where iSparrowRecord has stored the default configuration files. Defaults to /path/to/standard/config/folder/iSparrowRecord, e.g., /home/username/.config/iSparrowRecord on linux.
         Returns:
-            dict: Full configuration for the runner.
+            dict:  Full configuration for the runner.
         """
 
         # get config files, then run. Their existence is guaranteed by the install
-        default_filepath = Path(user_config_dir("iSparrowRecord")) / "default.yml"
+        default_filepath = Path(config_folder).expanduser() / "default.yml"
 
-        install_filepath = Path(user_config_dir("iSparrowRecord")) / "install.yml"
+        install_filepath = Path(config_folder).expanduser() / "install.yml"
 
         # get install config for paths
         with open(install_filepath, "r") as cfgfile:
             sparrow_config = yaml.safe_load(cfgfile)
 
+        for k, v in sparrow_config["Directories"].items():
+            sparrow_config["Directories"][k] = str(Path(v).expanduser())
+
         # get default config
         with open(default_filepath, "r") as cfgfile:
             default_cfg = yaml.safe_load(cfgfile)
 
-        custom_filepath = Path(custom_filepath).expanduser()
-        with open(custom_filepath, "r") as cfgfile:
-            custom_cfg = yaml.safe_load(cfgfile)
-
-        self._update_dict_recursive(default_cfg, custom_cfg)
-
-        # dump complete config
         default_cfg["Install"] = sparrow_config
 
-        time = datetime.now().strftime("%y%m%d_%H%M%S")
-        with open(
-            Path(Path(sparrow_config["Directories"]["data"]).expanduser())
-            / f"config_{time}.yml",
-            "w",
-        ) as outfile:
-            yaml.safe_dump(default_cfg, outfile)
+        # README: make sure this is always last, such that the custom config can modify everything
+        update_dict_recursive(default_cfg, custom_cfg)
 
         return default_cfg
 
@@ -99,7 +69,10 @@ class Runner:
             config (dict): Config containing 'runtime' or 'run_until' data nodes
 
         Returns:
-            int or datetime or None: If 'runtime' is given: the number of seconds to collect data. If 'run_until' is given: the timestamp (accurate to the second) until which data shall be collected. If none of both is given: None, meaning data collection runs indefinitely
+            int or datetime or None: If 'runtime' is given: the number of seconds to collect data.
+                                    If 'run_until' is given: the timestamp (accurate to the second)
+                                    until which data shall be collected. If none of both is given:
+                                    None, meaning data collection runs indefinitely.
         """
         if "run_until" in config:
             run_until = config["run_until"]
@@ -128,35 +101,60 @@ class Runner:
         else:
             return runtime
 
-    def __init__(self, custom_configpath: str = ""):
+    def __init__(
+        self,
+        custom_config: dict = None,
+        config_folder: str = user_config_dir("iSparrowRecord"),
+    ):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
                  Merges the updated config with the installation info and dumps everything to the same folder where
                  the data is recorded to.
         Args:
-            custom_configpath (str, optional): Path to a custom configuration path. Defaults to "".
+            custom_config (dict, optional): A custom configuration dictionary containing key-value pairs that correspond to arguments used by this class or by the Recorder. Defaults to {}.
+            suffix (str, optional): Suffix to add to run folder
         """
 
-        self.config = self._process_configs(custom_configpath)
+        if custom_config is None:
+            custom_config = {}
 
-        self.end_time = self._process_runtime(self.config["Output"])
+        self.config = self._process_configs(custom_config, config_folder=config_folder)
 
-        output = str(Path(self.config["Output"]["output_folder"]).expanduser())
-
-        # create recorder, then start
-        self.recorder = Recorder(
-            output_folder=str(Path(output).expanduser()), **self.config["Recording"]
+        # make new folder for data dumping
+        foldername = (
+            datetime.now().strftime("%y%m%d_%H%M%S")
+            + self.config["Output"]["data_folder_suffix"]
         )
 
-    @property
-    def output(self) -> str:
-        """
-        output Get the absolute path the data is recorded to
+        folderpath = (
+            Path(self.config["Install"]["Directories"]["data"]).expanduser()
+            / foldername
+        )
 
-        Returns:
-            str: Absolute path the data is recorded to
-        """
-        return self.recorder.output_folder
+        folderpath.mkdir()
+
+        self.output_path = str(folderpath)
+
+        # update config
+        self.config["Output"]["output_folder"] = self.output_path
+
+        # determine for how long the runner should collect data
+        self.end_time = self._process_runtime(self.config["Output"])
+
+        # dump the config alongside the data
+        if self.config["Output"]["dump_config"] is True:
+            time = datetime.now().strftime("%y%m%d_%H%M%S")
+
+            with open(
+                folderpath / f"config_{time}.yml",
+                "w",
+            ) as outfile:
+                yaml.safe_dump(self.config, outfile)
+
+        # create recorder
+        self.recorder = Recorder(
+            output_folder=str(folderpath), **self.config["Recording"]
+        )
 
     def run(self):
         """
@@ -165,14 +163,29 @@ class Runner:
         """
 
         if self.end_time is None:
+            print("start collecting data indefinitely")
             # run forever
             self.recorder.start(lambda x: False)
 
         if isinstance(self.end_time, int):
+            print(
+                "start collecting data for ",
+                self.end_time,
+                " seconds with ",
+                self.recorder.length_in_s,
+                "seconds per file",
+            )
             begin_time = time.time()
             # run until time passed
             self.recorder.start(lambda x: time.time() > begin_time + self.end_time)
 
         if isinstance(self.end_time, datetime):
+            print(
+                "start collecting data until ",
+                self.end_time,
+                "seconds with ",
+                self.recorder.length_in_s,
+                "seconds per file",
+            )
             # run until date is reached
             self.recorder.start(lambda x: datetime.now() > self.end_time)

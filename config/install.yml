@@ -1,4 +1,3 @@
 Directories: 
-  home: ~/iSparrow 
   data: &data_output ~/iSparrow_data
-  output: ~/iSparrow_output
+  config: iSparrowRecord

@@ -10,7 +10,7 @@ def test_audio_recorder_creation(
     folders,
     audio_recorder_fx,
 ):
-    _, DATA, _, _, _ = folders
+    _, DATA, _ = folders
 
     _, cfg = audio_recorder_fx
 
@@ -30,18 +30,11 @@ def test_audio_recorder_creation(
 
 
 def test_audio_functionality_record_mode(
-    folders,
     audio_recorder_fx,
 ):
-    _, DATA, _, _, _ = folders
-
     _, cfg = audio_recorder_fx
 
     recorder = Recorder.from_cfg(cfg["Data"])
-
-    # make sure the data folder is empty before doing anything
-    for file in Path(recorder.output).iterdir():
-        file.unlink()
 
     assert recorder.stream is not None
     assert recorder.p is not None

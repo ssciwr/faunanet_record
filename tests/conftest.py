@@ -1,50 +1,55 @@
-import sys
 from pathlib import Path
-
-sys.path.append(str(Path(__file__).parent))
-
 import pytest
 import shutil
 import yaml
-import set_up_sparrow as spf
+import iSparrowRecord.set_up as spf
 
-HOME = None
 DATA = None
-OUTPUT = None
 CONFIG = None
 
 
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(autouse=True)
 def install(request):
+    custom_cfgdir = (
+        Path(__file__).resolve().parent.parent / Path("tests") / "test_configs"
+    )
 
-    spf.set_up()
+    spf.set_up(
+        cfg_path=str(custom_cfgdir),
+    )
 
-    global HOME, DATA, OUTPUT, CONFIG
-    HOME = spf.HOME
+    global DATA, CONFIG
     DATA = spf.DATA
-    OUTPUT = spf.OUTPUT
     CONFIG = spf.CONFIG
 
-    print("folders: ", HOME, DATA, OUTPUT, CONFIG)
-
     # remove again after usage
-
     def teardown():
         shutil.rmtree(str(DATA))
-        shutil.rmtree(str(OUTPUT))
+        shutil.rmtree(str(CONFIG))
 
     request.addfinalizer(teardown)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
+def empty_data_folder(request):
+    global DATA
+
+    def teardown():
+        for thing in Path(DATA).iterdir():
+            shutil.rmtree(str(thing))
+
+    request.addfinalizer(teardown)
+
+
+@pytest.fixture()
 def folders():
-    custom_cfgdir = Path(__file__).resolve().parent.parent / Path("config")
-    global HOME, DATA, OUTPUT, CONFIG
-    return str(HOME), str(DATA), str(OUTPUT), str(CONFIG), str(custom_cfgdir)
+    custom_cfgdir = Path(__file__).resolve().parent / Path("test_configs")
+    global DATA, CONFIG
+    return str(CONFIG), str(DATA), str(custom_cfgdir)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def audio_recorder_fx():
     filepath = Path(__file__).resolve()
     testpath = filepath.parent
