@@ -1,6 +1,7 @@
 from iSparrowRecord import Runner
 from iSparrowRecord import utils
 from pathlib import Path
+from platformdirs import user_config_dir
 import librosa
 
 
@@ -9,7 +10,9 @@ def test_integration(folders, empty_data_folder):
 
     config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
-    runner = Runner(config)
+    runner = Runner(
+        config, config_folder=Path(user_config_dir("iSparrowRecord")) / "tests"
+    )
     assert (
         len(list(Path(runner.output_path).expanduser().iterdir())) == 1
     )  # config output is there

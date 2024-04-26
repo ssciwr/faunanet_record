@@ -1,9 +1,9 @@
 import yaml
 from pathlib import Path
 from platformdirs import user_config_dir
-from datetime import datetime, timedelta
+from datetime import datetime
 import warnings
-from time import sleep
+import time
 
 from .audio_recording import Recorder
 from .utils import update_dict_recursive
@@ -25,21 +25,23 @@ class Runner:
     run Run data collection
     """
 
-    def _process_configs(self, custom_cfg: dict) -> dict:
+    def _process_configs(
+        self, custom_cfg: dict, config_folder: str = user_config_dir("iSparrowRecord")
+    ) -> dict:
         """
-        _process_configs _summary_
+        _process_configs Make a complete config dictionary that contains all necessary parameters for the runner to work.
 
         Args:
-            custom_cfg (dict): _description_
-
+            custom_cfg (dict): custom dictionary that overrides some of the parameters for the runner.
+            config_folder (optional, str): When given, the folder where iSparrowRecord has stored the default configuration files. Defaults to /path/to/standard/config/folder/iSparrowRecord, e.g., /home/username/.config/iSparrowRecord on linux.
         Returns:
-            dict: _description_
+            dict:  Full configuration for the runner.
         """
 
         # get config files, then run. Their existence is guaranteed by the install
-        default_filepath = Path(user_config_dir("iSparrowRecord")) / "default.yml"
+        default_filepath = Path(config_folder).expanduser() / "default.yml"
 
-        install_filepath = Path(user_config_dir("iSparrowRecord")) / "install.yml"
+        install_filepath = Path(config_folder).expanduser() / "install.yml"
 
         # get install config for paths
         with open(install_filepath, "r") as cfgfile:
@@ -108,27 +110,24 @@ class Runner:
         else:
             return runtime
 
-    def _define_starting_time(self) -> datetime:
-        """
-        _define_starting_time Get next full second of the starting time
-
-
-        Returns:
-            datetime: current time rounded to the NEXT full second
-        """
-        return (datetime.now() + timedelta(seconds=1)).replace(microsecond=0)
-
-    def __init__(self, custom_config: dict = {}):
+    def __init__(
+        self,
+        custom_config: dict = None,
+        config_folder: str = user_config_dir("iSparrowRecord"),
+    ):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
-                Merges the updated config with the installation info and dumps everything to the same folder where
-                the data is recorded to.
+                 Merges the updated config with the installation info and dumps everything to the same folder where
+                 the data is recorded to.
         Args:
             custom_config (dict, optional): A custom configuration dictionary containing key-value pairs that correspond to arguments used by this class or by the Recorder. Defaults to {}.
             suffix (str, optional): Suffix to add to run folder
         """
 
-        self.config = self._process_configs(custom_config)
+        if custom_config is None:
+            custom_config = {}
+
+        self.config = self._process_configs(custom_config, config_folder=config_folder)
 
         # make new folder for data dumping
         foldername = (
@@ -179,10 +178,8 @@ class Runner:
             self.recorder.start(lambda x: False)
 
         if isinstance(self.end_time, int):
-
-            # run until time has passed
             print(
-                "... ...collecting data for ",
+                "start collecting data for ",
                 self.end_time,
                 " seconds with ",
                 self.recorder.length_in_s,

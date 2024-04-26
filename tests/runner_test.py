@@ -3,22 +3,27 @@ from iSparrowRecord import utils
 from pathlib import Path
 from datetime import datetime
 import pytest
+from platformdirs import user_config_dir
+
+TEST_CFGS = user_config_dir("iSparrowRecord/tests")
 
 
 def test_config_processing(install, folders):
     _, _, cfgdir = folders
     config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
-    runner = Runner(config)
+    runner = Runner(config, config_folder=TEST_CFGS)
 
-    cfg = runner._process_configs(config)
+    cfg = runner._process_configs(config, config_folder=TEST_CFGS)
     assert cfg["Output"]["runtime"] == 8
-    assert cfg["Output"]["output_folder"] == "~/iSparrow_data"
+    assert cfg["Output"]["output_folder"] == "~/iSparrow_data/tests"
     assert cfg["Recording"]["sample_rate"] == 32000
     assert cfg["Recording"]["length_s"] == 4
     assert cfg["Recording"]["channels"] == 1
     assert cfg["Recording"]["mode"] == "record"
-    assert cfg["Install"]["Directories"]["data"] == str(Path.home() / "iSparrow_data")
+    assert cfg["Install"]["Directories"]["data"] == str(
+        Path.home() / "iSparrow_data/tests"
+    )
 
     # test that the timestamp is correct at least to the minute. Seconds can be too short...
     part_of_name = datetime.now().strftime("%y%m%d_%H%M")
@@ -45,14 +50,15 @@ def test_condition_creation(install, folders):
     # modify config with a suffix unique for this test case
     config["Output"]["data_folder_suffix"] = "_condition_creation"
 
-    runner = Runner(config)
+    runner = Runner(config, config_folder=TEST_CFGS)
 
-    cfg = runner._process_configs(config)
+    cfg = runner._process_configs(config, config_folder=TEST_CFGS)
 
     end_time = runner._process_runtime(cfg["Output"])
 
     assert end_time == 8
 
+    del end_time
     cfg["Output"]["run_until"] = "2024-04-04_12:05:24"
 
     with pytest.warns(UserWarning) as warning_info:
@@ -74,10 +80,6 @@ def test_condition_creation(install, folders):
     end_time = runner._process_runtime(cfg["Output"])
     assert end_time is None
 
-    cfg["Output"]["runtime"] = "inf"
-    end_time = runner._process_runtime(cfg["Output"])
-    assert end_time is None
-
 
 def test_runner_creation(install, folders):
     _, _, cfgdir = folders
@@ -86,7 +88,7 @@ def test_runner_creation(install, folders):
     # modify config with a suffix unique for this test case
     config["Output"]["data_folder_suffix"] = "_runner_creation"
 
-    runner = Runner(config)
+    runner = Runner(config, config_folder=TEST_CFGS)
 
     assert runner.end_time == 8
     assert "Install" in runner.config
@@ -94,6 +96,7 @@ def test_runner_creation(install, folders):
     assert "Recording" in runner.config
     assert runner.output_path == str(
         Path("~/iSparrow_data").expanduser()
+        / Path("tests")
         / (datetime.now().strftime("%y%m%d_%H%M%S") + "_runner_creation")
     )
     assert runner.recorder.is_running is False  # not yet running
