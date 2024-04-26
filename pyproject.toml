@@ -35,7 +35,7 @@ addopts="-v -x"
 testpaths = ["tests"] 
 
 [tool.coverage.run]
-branch = false
+branch = true
 source = ["./src/iSparrowRecord"]
 
 [tool.coverage.report]
