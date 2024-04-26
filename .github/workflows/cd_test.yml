@@ -2,13 +2,14 @@ name: TestPyPI_release
   
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Triggers this workflow when the tests run successfully on the main branch
   workflow_run:
     workflows: [tests]
     branches: [ master ]
     types: 
         - completed
-
+ 
+  # allow manual trigger
   workflow_dispatch: 
 
 jobs:
