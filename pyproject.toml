@@ -1,6 +1,5 @@
 [project]
 name = "iSparrowRecord"
-version = "0.1"
 requires-python = ">= 3.10"
 authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
 description = "Audio Recording Facilities for the iSparrow package"
