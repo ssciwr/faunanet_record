@@ -4,14 +4,12 @@ name: TestCD
 on:
   # Triggers this workflow when the tests run successfully on the main branch
   workflow_run:
-    workflows: [tests]
+    workflows: [CI]
     # branches: [ master ]
     types: 
         - completed
 
   push: 
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
  
   # allow manual trigger
