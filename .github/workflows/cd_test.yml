@@ -1,4 +1,4 @@
-name: TestPyPI_release
+name: TestCD
   
 # Controls when the action will run. 
 on:
@@ -8,6 +8,11 @@ on:
     # branches: [ master ]
     types: 
         - completed
+
+  push: 
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
  
   # allow manual trigger
   workflow_dispatch: 
