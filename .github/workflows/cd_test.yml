@@ -3,11 +3,10 @@ name: TestCD
 # Controls when the action will run. 
 on:
   # Triggers this workflow when the tests run successfully on the main branch
-  push: 
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+  workflow_run:
+    workflows: ['CI']
+    types:
+      - completed
   # allow manual trigger
   workflow_dispatch: 
 
@@ -16,14 +15,6 @@ jobs:
       name: Build distribution
       runs-on: ubuntu-latest
       steps:
-      - name: Wait for tests to succeed
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with: 
-          ref: ${{ github.ref }}
-          running-workflow-name: 'Build distribution'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 
-
       - uses: actions/checkout@v4
 
       - name: Set up Python
