@@ -11,7 +11,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "License :: OSI Approved :: Apache License",
 ]
-
+dynamic = ["version"]
 dependencies = [
     "numpy", 
     "librosa", 
@@ -29,6 +29,6 @@ Repository = "https://github.com/ssciwr/iSparrowRecord"
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
-
-# add additional stuff when needed, poetry support? 
+# tools
+[tool.setuptools.dynamic]
+version = { attr = "iSparrowRecord.__version__" }
