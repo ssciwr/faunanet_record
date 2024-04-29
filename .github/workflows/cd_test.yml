@@ -5,7 +5,7 @@ on:
   # Triggers this workflow when the tests run successfully on the main branch
   workflow_run:
     workflows: [tests]
-    branches: [ master ]
+    # branches: [ master ]
     types: 
         - completed
  
