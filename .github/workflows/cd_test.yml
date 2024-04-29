@@ -1,19 +1,13 @@
 name: TestCD
   
 # Controls when the action will run. 
-# on:
-#   #Triggers this workflow when the tests run successfully on the main branch
-#   workflow_run:
-#     workflows: ['CI']
-#     branches: ["master"]
-#     types:
-#       - completed
 on:
-    # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  #Triggers this workflow when the tests run successfully on the main branch
+  workflow_run:
+    workflows: ['CI']
+    branches: ["master"]
+    types:
+      - completed
 
   #allow manual trigger
   workflow_dispatch:
@@ -22,7 +16,7 @@ jobs:
     build_for_testpypi:
       name: Build distribution
       runs-on: ubuntu-latest
-    #   if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
       steps:
       - uses: actions/checkout@v4
 
