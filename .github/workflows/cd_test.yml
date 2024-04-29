@@ -1,13 +1,19 @@
 name: TestCD
   
 # Controls when the action will run. 
+# on:
+#   #Triggers this workflow when the tests run successfully on the main branch
+#   workflow_run:
+#     workflows: ['CI']
+#     branches: ["master"]
+#     types:
+#       - completed
 on:
-  #Triggers this workflow when the tests run successfully on the main branch
-  workflow_run:
-    workflows: ['CI']
-    branches: ["master"]
-    types:
-      - completed
+    # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
   #allow manual trigger
   workflow_dispatch:
