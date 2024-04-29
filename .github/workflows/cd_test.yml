@@ -11,7 +11,9 @@ on:
 
   push: 
     branches: [ master ]
- 
+  pull_request:
+    branches: [ master ]
+
   # allow manual trigger
   workflow_dispatch: 
 
