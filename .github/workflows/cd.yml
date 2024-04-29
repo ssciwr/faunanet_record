@@ -1,14 +1,13 @@
 name: PyPI_release
   
-# Controls when the action will run. 
+
+# run only when a push into master occurs on a tag that specifies a semantic version
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  # this workflow must be triggered manually always
-  workflow_dispatch:
+    push:
+      branches:
+        - main
+      tags:
+        - "*.*.*"
 
 jobs:
     build_for_pypi:
@@ -37,7 +36,7 @@ jobs:
     publish-to-pypi:
       name: Publish python distribution to pypi 
       needs: build_for_pypi
-    #   if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+      if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
       runs-on: ubuntu-latest
       environment: 
         name: pypi_release
