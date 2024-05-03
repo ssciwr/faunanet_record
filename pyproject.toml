@@ -18,7 +18,8 @@ dependencies = [
     "PyYAML", 
     "wave", 
     "pyaudio",
-    "platformdirs"
+    "appdirs", 
+    "click"
 ]
 
 [project.urls]
@@ -55,3 +56,6 @@ fail_under = 80
 
 [tool.coverage.html]
 directory = "coverage_html_report"
+
+[project.scripts]
+iSparrowRecord = "iSparrowRecord.cli:cli"
