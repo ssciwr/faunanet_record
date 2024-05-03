@@ -17,7 +17,8 @@ dependencies = [
     "PyYAML", 
     "wave", 
     "pyaudio",
-    "platformdirs"
+    "appdirs", 
+    "click"
 ]
 
 [project.urls]
@@ -30,3 +31,6 @@ build-backend = "setuptools.build_meta"
 # tools
 [tool.setuptools.dynamic]
 version = { attr = "iSparrowRecord.__version__" }
+
+[project.scripts]
+iSparrowRecord = "iSparrowRecord.cli:cli"
