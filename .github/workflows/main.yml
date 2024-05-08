@@ -58,7 +58,7 @@ jobs:
         # test stuff
         python3 -m pytest --cov=./src/iSparrowRecord --cov-report=xml
 
-    - name: Upload coverage reports to Codecov
+    - name: Upload coverage reports to Codecov for python3.12
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
