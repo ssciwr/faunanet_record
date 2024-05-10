@@ -5,10 +5,10 @@ name: PyPI_release
 on:
     # trigger on tagged push to main branch
     push:
-        branches:
-          - main
-        tags:
-          - "*.*.*"
+        # branches:
+        #   - main
+        # tags:
+        #   - "*.*.*"
 
     #allow manual trigger
     workflow_dispatch:

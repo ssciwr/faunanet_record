@@ -2,6 +2,8 @@ name: TestCD
   
 # Controls when the action will run. 
 on:
+    push: 
+
     #allow manual trigger
     workflow_dispatch:
 
