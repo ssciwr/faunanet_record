@@ -9,20 +9,35 @@ tbd
 tbd 
 
 ## Installation
-iSparrowRecord officially only supports Linux-based operating systems and tests on Ubuntu. That being said, it has been successfully deployed on macOS, too. However, it has never been tried on Windows. Follow the following instruction to run it on ubuntu: 
+iSparrowRecord officially only supports Linux-based operating systems and tests on Ubuntu. That being said, it has been successfully deployed on macOS, too. However, it has never been tried on Windows. Follow the following instruction to run it on Ubuntu: 
 
 - Install portaudio and python development libraries first. `iSparrowRecord` depends on pyaudio, which in turn depends on portaudio. Hence, these steps are essential. 
 ```bash 
 sudo apt install python3.x-dev portaudio19-dev
 ```
-Replace the `x` with the python version you want `iSparrowRecord` to run on, or leave it out and use `python3` only if you want your OS' default python version. `iSparrowRecord` has been tested on python3.9 and python3.12. 
+Replace the `x` with the python version you want `iSparrowRecord` to run on, or leave it out and use `python3` only if you want your OS' default python version. `iSparrowRecord` has been tested on `python3.9` and `python3.12`.
 
-Then, to get the newest release, install `iSparrowRecord` via pip: 
+- Then, to get the newest release, install `iSparrowRecord` via pip: 
 ```bash 
 python3.x -m pip install isparrowrecord
 ```
+After this, you should be able to get the `iSparrowRecord` cli in a terminal window by typing `iSparrowRecord`. 
 
-After this, you should be able to get the `iSparrowRecord` cli in a terminal window by typing `iSparrowRecord`.
+For a development installation, install `iSparrowRecord` in editable mode: 
+
+- Clone this repository
+```bash
+ git clone https://github.com/ssciwr/iSparrowRecord.git 
+```
+or, when you're using ssh: 
+```bash
+git@github.com:ssciwr/iSparrowRecord.git
+```
+
+- then, from the root directory of the repository: 
+```bash 
+python3 -m pip install -e . && python3 -m pip install -r requirements-dev.txt
+```
 
 ## Usage
 tbd
