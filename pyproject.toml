@@ -1,7 +1,7 @@
 [project]
 name = "iSparrowRecord"
 version = "0.1"
-requires-python = ">= 3.10"
+requires-python = ">= 3.9"
 authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
 description = "Audio Recording Facilities for the iSparrow package"
 readme ="README.md"
@@ -22,13 +22,40 @@ dependencies = [
     "click"
 ]
 
-
 [project.urls]
 Repository = "https://github.com/ssciwr/iSparrowRecord"
 
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+# Tools 
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts="-v -x"
+testpaths = ["tests"] 
+
+[tool.coverage.run]
+branch = true
+source = ["./src/iSparrowRecord"]
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if non-runnable code isn't run:
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+    ]
+fail_under = 80
+
+[tool.coverage.html]
+directory = "coverage_html_report"
 
 [project.scripts]
 iSparrowRecord = "iSparrowRecord.cli:cli"
