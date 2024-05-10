@@ -1,6 +1,6 @@
 [project]
 name = "isparrowrecord"
-requires-python = ">= 3.10"
+requires-python = ">= 3.9"
 authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
 description = "Audio Recording Facilities for the isparrow package"
 readme ="README.md"
