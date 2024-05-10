@@ -1,8 +1,8 @@
 [project]
-name = "iSparrowRecord"
+name = "isparrowrecord"
 requires-python = ">= 3.10"
 authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
-description = "Audio Recording Facilities for the iSparrow package"
+description = "Audio Recording Facilities for the isparrow package"
 readme ="README.md"
 license={file = "LICENSE"}
 classifiers = [
