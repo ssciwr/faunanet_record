@@ -17,7 +17,7 @@ dependencies = [
     "PyYAML", 
     "wave", 
     "pyaudio",
-    "appdirs", 
+    "platformdirs", 
     "click"
 ]
 

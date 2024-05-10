@@ -1,7 +1,7 @@
 from iSparrowRecord import Runner
 from iSparrowRecord import utils
 from pathlib import Path
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 import librosa
 
 
