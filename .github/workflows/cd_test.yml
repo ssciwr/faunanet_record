@@ -2,13 +2,6 @@ name: TestCD
   
 # Controls when the action will run. 
 on:
-  #Triggers this workflow when the tests run successfully on the main branch
-  push:
-    branches:
-      - main
-    tags:
-      - "*.*.*"
-
   #allow manual trigger
   workflow_dispatch:
 
