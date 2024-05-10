@@ -5,11 +5,6 @@ on:
     #allow manual trigger
     workflow_dispatch:
 
-    # trigger on tagged push to main branch
-    push:
-        # branches:
-        #   - main
-
 jobs:
     build_for_testpypi:
       name: Build distribution
