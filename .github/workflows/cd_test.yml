@@ -2,8 +2,13 @@ name: TestCD
   
 # Controls when the action will run. 
 on:
-  #allow manual trigger
-  workflow_dispatch:
+    #allow manual trigger
+    workflow_dispatch:
+
+    # trigger on tagged push to main branch
+    push:
+        # branches:
+        #   - main
 
 jobs:
     build_for_testpypi:
