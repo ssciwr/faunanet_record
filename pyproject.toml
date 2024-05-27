@@ -1,5 +1,5 @@
 [project]
-name = "iSparrowRecord"
+name = "faunanet_record"
 version = "0.1"
 requires-python = ">= 3.9"
 authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
@@ -37,7 +37,7 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["./src/iSparrowRecord"]
+source = ["./src/faunanet_record"]
 
 [tool.coverage.report]
 # Regexes for lines to exclude from consideration
@@ -58,4 +58,4 @@ fail_under = 80
 directory = "coverage_html_report"
 
 [project.scripts]
-iSparrowRecord = "iSparrowRecord.cli:cli"
+faunanet_record = "faunanet_record.cli:cli"

@@ -1,4 +1,4 @@
-from iSparrowRecord import Recorder
+from faunanet_record import Recorder
 from pathlib import Path
 import pyaudio
 from datetime import datetime

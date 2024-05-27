@@ -2,7 +2,7 @@ from pathlib import Path
 import pytest
 import shutil
 import yaml
-import iSparrowRecord.set_up as spf
+import faunanet_record.set_up as spf
 
 DATA = None
 CONFIG = None

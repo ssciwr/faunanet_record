@@ -1,5 +1,5 @@
 from click.testing import CliRunner
-from iSparrowRecord import cli
+from faunanet_record import cli
 from pathlib import Path
 import pytest
 
@@ -38,7 +38,7 @@ def test_cli_run_default(folders, empty_data_folder):
 
     runner = CliRunner()
 
-    result = runner.invoke(cli.run, "--defaults='~/.config/iSparrowRecord/tests'")
+    result = runner.invoke(cli.run, "--defaults='~/.config/faunanet_record/tests'")
 
     # make sure things ran smoothly
     assert result.exit_code == 0
@@ -67,7 +67,7 @@ def test_cli_run_debug(empty_data_folder):
 
     with pytest.warns(UserWarning) as warning_info:
         result = runner.invoke(
-            cli.run, "--debug --defaults='~/.config/iSparrowRecord/tests'"
+            cli.run, "--debug --defaults='~/.config/faunanet_record/tests'"
         )
 
     assert result.exit_code == 0
@@ -96,7 +96,7 @@ def test_cli_run_custom(folders, empty_data_folder):
     path = str(Path(cfgdir) / "custom_example.yml")
 
     result = runner.invoke(
-        cli.run, f"--cfg={path} --defaults='~/.config/iSparrowRecord/tests'"
+        cli.run, f"--cfg={path} --defaults='~/.config/faunanet_record/tests'"
     )
 
     assert result.exit_code == 0
@@ -143,7 +143,7 @@ def test_cli_run_custom_replace(folders, empty_data_folder):
 
     result = runner.invoke(
         cli.run,
-        f"--cfg={path} --replace={dictstr} --defaults='~/.config/iSparrowRecord/tests'",
+        f"--cfg={path} --replace={dictstr} --defaults='~/.config/faunanet_record/tests'",
     )
 
     assert result.exit_code == 0

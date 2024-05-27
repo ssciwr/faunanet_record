@@ -1,5 +1,5 @@
-from iSparrowRecord import Runner
-from iSparrowRecord import utils
+from faunanet_record import Runner
+from faunanet_record import utils
 from pathlib import Path
 from appdirs import user_config_dir
 import librosa
@@ -11,7 +11,7 @@ def test_integration(folders, empty_data_folder):
     config = utils.read_yaml(Path(cfgdir) / "custom_example.yml")
 
     runner = Runner(
-        config, config_folder=Path(user_config_dir("iSparrowRecord")) / "tests"
+        config, config_folder=Path(user_config_dir("faunanet_record")) / "tests"
     )
     assert (
         len(list(Path(runner.output_path).expanduser().iterdir())) == 1

@@ -1,11 +1,11 @@
-from iSparrowRecord import Runner
-from iSparrowRecord import utils
+from faunanet_record import Runner
+from faunanet_record import utils
 from pathlib import Path
 from datetime import datetime
 import pytest
 from appdirs import user_config_dir
 
-TEST_CFGS = user_config_dir("iSparrowRecord/tests")
+TEST_CFGS = user_config_dir("faunanet_record/tests")
 
 
 def test_config_processing(install, folders):

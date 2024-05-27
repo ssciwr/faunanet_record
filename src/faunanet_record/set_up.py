@@ -28,7 +28,7 @@ def make_directories(base_cfg_dirs: dict):
         raise KeyError("The data folder for iSparrow must be given in the base config")
 
     if "config" not in base_cfg_dirs:
-        base_cfg_dirs["config"] = "iSparrowRecord"
+        base_cfg_dirs["config"] = "faunanet_record"
 
     isd = Path(base_cfg_dirs["data"]).expanduser().resolve()
     isc = Path(user_config_dir(base_cfg_dirs["config"])).expanduser().resolve()
@@ -42,7 +42,7 @@ def make_directories(base_cfg_dirs: dict):
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
 def set_up(cfg_path: str = ""):
     """
-    set_up set up the iSparrowRecorder system to be ready for running and recording data. Makes data and config folders and copies the default configs there.
+    set_up set up the faunanet_recorder system to be ready for running and recording data. Makes data and config folders and copies the default configs there.
 
     Args:
         cfg_path (str): Path to a folder containing "default.yml" (the default parameters) and "install.yml" (the install parameters).
