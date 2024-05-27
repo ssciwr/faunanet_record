@@ -1,7 +1,7 @@
 from faunanet_record import Runner
 from faunanet_record import utils
 from pathlib import Path
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 import librosa
 
 

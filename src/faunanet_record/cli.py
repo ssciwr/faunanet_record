@@ -5,7 +5,7 @@ from . import set_up as sus
 from pathlib import Path
 import warnings
 import click
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 
 
 @click.group()

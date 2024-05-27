@@ -1,6 +1,6 @@
 import shutil
 from pathlib import Path
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 from .utils import read_yaml
 
 DATA = None
