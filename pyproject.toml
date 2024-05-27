@@ -2,28 +2,36 @@
 name = "faunanet_record"
 version = "0.1"
 requires-python = ">= 3.9"
-authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
-description = "Audio Recording Facilities for the iSparrow package"
-readme ="README.md"
-license={file = "LICENSE"}
+authors = [
+    { name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de" },
+    { name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de" },
+]
+description = "Audio Recording Facilities for the faunanet package"
+readme = "README.md"
+license = { file = "LICENSE" }
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
-    "License :: OSI Approved :: Apache License",
+    "Programming Language :: Python :: 3.9",
+    "Operating System :: Linux",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Multimedia :: Sound/Audio :: Capture/Recording",
 ]
 
 dependencies = [
-    "numpy", 
-    "librosa", 
-    "PyYAML", 
-    "wave", 
+    "numpy",
+    "librosa",
+    "PyYAML",
+    "wave",
     "pyaudio",
-    "appdirs", 
-    "click"
+    "platformdirs",
+    "click",
 ]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "coverage"]
 
 [project.urls]
 Repository = "https://github.com/ssciwr/iSparrowRecord"
+Issues = "https://github.com/ssciwr/iSparrowRecord/issues"
 
 [build-system]
 requires = ["setuptools", "wheel"]
@@ -32,8 +40,8 @@ build-backend = "setuptools.build_meta"
 # Tools 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts="-v -x"
-testpaths = ["tests"] 
+addopts = "-v -x"
+testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
@@ -51,7 +59,7 @@ exclude_also = [
 
     # Don't complain about abstract methods, they aren't run:
     "@(abc\\.)?abstractmethod",
-    ]
+]
 fail_under = 80
 
 [tool.coverage.html]
