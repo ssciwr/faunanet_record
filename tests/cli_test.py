@@ -17,7 +17,7 @@ def test_cli_install(folders, empty_data_folder):
     output = result_install.output.split("\n")
 
     assert output == [
-        "Creating iSparrow folders and downloading data...",
+        "Creating faunanet folders...",
         "...making directories",
         "Installation finished",
         "",

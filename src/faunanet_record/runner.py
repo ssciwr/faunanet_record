@@ -17,7 +17,7 @@ class Runner:
     -----------
     config (dict): Configuration parameters for data collection
     end_time (int or datetime): Limit for how long or until when to collect data
-    recorder (iSparroRecord.Recorder): Recorder to collect data. See iSparrow.Recorder documentation
+    recorder (iSparroRecord.Recorder): Recorder to collect data. See faunanet.RecorderBase documentation
 
     Methods:
     --------

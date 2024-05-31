@@ -25,7 +25,7 @@ def make_directories(base_cfg_dirs: dict):
     """
     print("...making directories")
     if "data" not in base_cfg_dirs:
-        raise KeyError("The data folder for iSparrow must be given in the base config")
+        raise KeyError("The data folder for faunaanet must be given in the base config")
 
     if "config" not in base_cfg_dirs:
         base_cfg_dirs["config"] = "faunanet_record"
@@ -49,7 +49,7 @@ def set_up(cfg_path: str = ""):
         for_tests (bool, optional): Whether a special 'test' directory should be created for testing.
                                     Used in unit tests to not interfer with base installation mostly. Defaults to False.
     """
-    print("Creating iSparrow folders and downloading data...")
+    print("Creating faunanet folders...")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
     if cfg_path == "":
