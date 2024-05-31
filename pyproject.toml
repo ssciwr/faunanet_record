@@ -2,7 +2,7 @@
 name = "faunanet-record"
 requires-python = ">= 3.9"
 authors=[{name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}, {name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}]
-description = "Audio Recording Facilities for the isparrow package"
+description = "Audio recording facilities for the faunanet package"
 readme ="README.md"
 license={file = "LICENSE"}
 classifiers = [
