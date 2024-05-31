@@ -1,4 +1,4 @@
-from iSparrowRecord import utils
+from faunanet_record import utils
 import pytest
 
 

@@ -1,6 +1,6 @@
 import yaml
 from pathlib import Path
-from appdirs import user_config_dir
+from platformdirs import user_config_dir
 from datetime import datetime
 import warnings
 import time
@@ -17,7 +17,7 @@ class Runner:
     -----------
     config (dict): Configuration parameters for data collection
     end_time (int or datetime): Limit for how long or until when to collect data
-    recorder (iSparroRecord.Recorder): Recorder to collect data. See iSparrow.Recorder documentation
+    recorder (iSparroRecord.Recorder): Recorder to collect data. See faunanet.RecorderBase documentation
 
     Methods:
     --------
@@ -26,14 +26,14 @@ class Runner:
     """
 
     def _process_configs(
-        self, custom_cfg: dict, config_folder: str = user_config_dir("iSparrowRecord")
+        self, custom_cfg: dict, config_folder: str = user_config_dir("faunanet_record")
     ) -> dict:
         """
         _process_configs Make a complete config dictionary that contains all necessary parameters for the runner to work.
 
         Args:
             custom_cfg (dict): custom dictionary that overrides some of the parameters for the runner.
-            config_folder (optional, str): When given, the folder where iSparrowRecord has stored the default configuration files. Defaults to /path/to/standard/config/folder/iSparrowRecord, e.g., /home/username/.config/iSparrowRecord on linux.
+            config_folder (optional, str): When given, the folder where faunanet_record has stored the default configuration files. Defaults to /path/to/standard/config/folder/faunanet_record, e.g., /home/username/.config/faunanet_record on linux.
         Returns:
             dict:  Full configuration for the runner.
         """
@@ -104,7 +104,7 @@ class Runner:
     def __init__(
         self,
         custom_config: dict = None,
-        config_folder: str = user_config_dir("iSparrowRecord"),
+        config_folder: str = user_config_dir("faunanet_record"),
     ):
         """
         __init__ Create a new 'Runner' instance. A custom configpath can be supplied to update the default config with.
