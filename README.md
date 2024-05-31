@@ -1,5 +1,5 @@
-[![tests](https://github.com/ssciwr/faunanet-record/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/ssciwr/faunanet-record/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/ssciwr/faunanet-record/graph/badge.svg?token=FwyE0PNiOk)](https://codecov.io/gh/ssciwr/faunanet-record)
+[![tests](https://github.com/ssciwr/iSparrowRecord/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/ssciwr/iSparrowRecord/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/ssciwr/iSparrowRecord/graph/badge.svg?token=FwyE0PNiOk)](https://codecov.io/gh/ssciwr/iSparrowRecord)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ssciwr_iSparrowRecord&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ssciwr_iSparrowRecord)
 [![Supported OS: Linux](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-green.svg)](https://www.linux.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
