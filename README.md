@@ -91,14 +91,14 @@ In the following the meaning of the parameters will be explained.
 ## Run `faunanet-record` 
 After installation and setup, you can run `faunanet-record` from the terminal (assuming again it's accessible from you `PATH`): 
 ```bash 
-faunanet-record run
+faunanet_record run
 ```
 This will run `faunanet-record` with the default parameters defined above. If you want to run a session with customized paramters, you can use the same approach as before: 
 - write your custom config yaml file and save it at a convenient location, for instance at `~faunanet_configs/record_config.yml`. 
 - 
 - pass it to the `run` command: 
 ```bash 
-faunanet-record run --cfg=~faunanet_configs/record_config.yml 
+faunanet_record run --cfg=~faunanet_configs/record_config.yml 
 ``` 
 You only have to include the parameters that you want to override in the custom config, but you must adhere to the hierarchy of the file. See the example below: 
 ```yaml
@@ -113,6 +113,6 @@ Recording:
 ## Using `faunanet-record` as a library 
 You can use `faunanet-record` in your own project by importing it: 
 ```python 
-import faunanet-record as faunr 
+import faunanet_record as faunr 
 ```
 which exposes the `Runner` and `Recorder` classes per default. See the [docs](https://isparrowrecord.readthedocs.io/en/latest/) for documentation of available methods and classes.
