@@ -3,4 +3,4 @@ from .runner import Runner
 
 __all__ = ["Recorder", "Runner", "__version__"]
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"

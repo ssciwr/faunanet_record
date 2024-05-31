@@ -2,9 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /home
 
-
 # install tensorflow lite
-RUN pip install faunanetrecord
+RUN pip install faunanet-record
 WORKDIR /home/faunanet
 
 # add folders for incoming data and for output and make sure they are mounted
