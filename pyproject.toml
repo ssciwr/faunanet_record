@@ -1,8 +1,8 @@
 [project]
 name = "faunanet-record"
 requires-python = ">= 3.9"
-authors=[{name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}, {name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}]
-description = "Audio recording facilities for the faunanet package"
+authors=[{name = "Harald Mack", email = "harald.mack@iwr.uni-heidelberg.de"}, {name = "Inga Ulusoy", email = "inga.ulusoy@uni-heidelberg.de"}]
+description = "Audio Recording Facilities for the isparrow package"
 readme ="README.md"
 license={file = "LICENSE"}
 classifiers = [
@@ -25,6 +25,7 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/ssciwr/iSparrowRecord"
+Issues = "https://github.com/ssciwr/iSparrowRecord/issues"
 
 [project.scripts]
 faunanet_record = "faunanet_record.cli:cli"
