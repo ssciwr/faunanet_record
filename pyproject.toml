@@ -38,6 +38,13 @@ dev = [
     "librosa", 
 ]
 
+doc = [
+    "sphinx",
+    "myst-parser",
+    "sphinxcontrib-napoleon",
+    "sphinx-rtd-theme"
+]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
