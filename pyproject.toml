@@ -25,6 +25,7 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/ssciwr/iSparrowRecord"
+Issues = "https://github.com/ssciwr/iSparrowRecord/issues"
 
 [project.scripts]
 faunanet_record = "faunanet_record.cli:cli"
