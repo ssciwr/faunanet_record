@@ -2,12 +2,5 @@
 [![codecov](https://codecov.io/gh/ssciwr/iSparrowRecord/graph/badge.svg?token=FwyE0PNiOk)](https://codecov.io/gh/ssciwr/iSparrowRecord)
 # faunanet_record - Audio Recording facilities for the faunanet package
 
-## Summary 
-tbd
-
-## Features 
-tbd 
-
 ## Installation 
-tbd 
-
+First make sure that you have the necessary external dependencies installed: 
