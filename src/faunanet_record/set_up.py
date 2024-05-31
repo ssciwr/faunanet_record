@@ -42,14 +42,14 @@ def make_directories(base_cfg_dirs: dict):
 # add a fixture with session scope that emulates the result of a later to-be-implemented-install-routine
 def set_up(cfg_path: str = ""):
     """
-    set_up set up the iSparrowRecorder system to be ready for running and recording data. Makes data and config folders and copies the default configs there.
+    set_up set up the faunanet-record system to be ready for running and recording data. Makes data and config folders and copies the default configs there.
 
     Args:
         cfg_path (str): Path to a folder containing "default.yml" (the default parameters) and "install.yml" (the install parameters).
         for_tests (bool, optional): Whether a special 'test' directory should be created for testing.
                                     Used in unit tests to not interfer with base installation mostly. Defaults to False.
     """
-    print("Creating iSparrow folders and downloading data...")
+    print("Creating faunanet folders...")
     # user cfg can override stuff that the base cfg has. When the two are merged, the result has
     # the base_cfg values whereever user does not have anything
     if cfg_path == "":
