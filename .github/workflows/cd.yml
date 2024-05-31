@@ -1,12 +1,11 @@
 name: PyPI_release
-  
 
 # run only when a push into master occurs on a tag that specifies a semantic version
 on:
-    # trigger on tagged push to main branch
+    # trigger on tagged push to master branch
     push:
         branches:
-          - main
+          - master
         tags:
           - "*.*.*"
 
@@ -15,7 +14,7 @@ on:
 
 jobs:
     build_for_pypi:
-      name: Build distribution 
+      name: Build distribution
       runs-on: ubuntu-latest
       steps:
       - uses: actions/checkout@v4
@@ -23,11 +22,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
+          python-version: "3.12"
 
       - name: Install pypa/build
         run: python3 -m pip install build --user
-      
+
       - name: Build package
         run: python3 -m build
 
@@ -36,15 +35,15 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-    
+
     publish-to-pypi:
       name: Publish python distribution to pypi 
       needs: build_for_pypi
-      if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+      if: startsWith(github.ref, 'refs/tags/')
       runs-on: ubuntu-latest
-      environment: 
+      environment:
         name: pypi_release
-        url: https://pypi.org/p/iSparrowRecord
+        url: https://pypi.org/p/faunanet-record
       permissions: 
         id-token: write 
 
@@ -60,6 +59,7 @@ jobs:
 
     github-release:
       name: sign and upload
+      if: startsWith(github.ref, 'refs/tags/')
       needs:
       - publish-to-pypi
       runs-on: ubuntu-latest
@@ -90,7 +90,6 @@ jobs:
             '${{ github.ref_name }}'
             --repo '${{ github.repository }}'
             --notes ""
-
       - name: Upload artifact signatures to release
         env:
           GITHUB_TOKEN: ${{ github.token }}
