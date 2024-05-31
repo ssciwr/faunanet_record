@@ -17,7 +17,7 @@ def cli():
 
 
 @cli.command()
-@click.option("--cfg_dir", type=str, default=str(files(faunanet_record)))
+@click.option("--cfg_dir", type=str, default=str(files(faunanet_record).resolve()))
 def install(cfg_dir: str):
     "The directory given must contain 'default.yml' and 'install.yml'. Check out the defaults provided in the code repository under './config'."
     sus.set_up(cfg_dir)
