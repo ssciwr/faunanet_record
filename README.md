@@ -115,4 +115,4 @@ You can use `faunanet-record` in your own project by importing it:
 ```python 
 import faunanet-record as faunr 
 ```
-which exposes the `Runner` and `Recorder` classes per default. See the [docs]() for documentation of available methods and classes.
+which exposes the `Runner` and `Recorder` classes per default. See the [docs](https://isparrowrecord.readthedocs.io/en/latest/) for documentation of available methods and classes.
