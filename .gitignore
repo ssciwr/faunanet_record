@@ -126,5 +126,5 @@ cython_debug/
 .DS_Store
 
 # ide specifics 
-.vscode 
-.idea
+.vscode/
+.idea/
