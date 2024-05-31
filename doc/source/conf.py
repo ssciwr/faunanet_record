@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath("../../src/faunanet_record"))
 
 # -- Project information -----------------------------------------------------
 
-project = "faunanet"
+project = "faunanet-record"
 copyright = "2024, Scientific Software Center, Interdisciplinary Center for scientific computing, University of Heidelberg"
 author = "Inga Ulusoy inga.ulusoy@uni-heidelberg.de, Harald Mack, harald.mack@iwr.uni-heidelberg.de"
 
