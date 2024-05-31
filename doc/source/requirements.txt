@@ -1,0 +1,5 @@
+sphinx.ext.autodoc
+myst_parser
+sphinx.ext.napoleon
+sphinx.ext.todo
+sphinx_rtd_theme
