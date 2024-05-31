@@ -30,7 +30,7 @@ def install(cfg_dir: str):
 @click.option(
     "--defaults",
     help="Path to where the install and default configs are",
-    default=str(user_config_dir("iSparrowRecord")),
+    default=str(user_config_dir("faunanet_record")),
 )
 @click.option(
     "--replace",

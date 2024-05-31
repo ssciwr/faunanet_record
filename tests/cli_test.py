@@ -1,6 +1,7 @@
 from click.testing import CliRunner
-from iSparrowRecord import cli
+from faunanet_record import cli
 from pathlib import Path
+from platformdirs import user_config_dir
 import pytest
 
 
@@ -16,7 +17,7 @@ def test_cli_install(folders, empty_data_folder):
     output = result_install.output.split("\n")
 
     assert output == [
-        "Creating iSparrow folders and downloading data...",
+        "Creating faunanet folders...",
         "...making directories",
         "Installation finished",
         "",
@@ -34,11 +35,12 @@ def test_cli_install(folders, empty_data_folder):
 
 def test_cli_run_default(folders, empty_data_folder):
     _, data, _ = folders
-    print("datafolder: ", data)
 
     runner = CliRunner()
 
-    result = runner.invoke(cli.run, "--defaults='~/.config/iSparrowRecord/tests'")
+    result = runner.invoke(
+        cli.run, f"--defaults='{user_config_dir()}/faunanet_record/tests'"
+    )
 
     # make sure things ran smoothly
     assert result.exit_code == 0
@@ -67,7 +69,7 @@ def test_cli_run_debug(empty_data_folder):
 
     with pytest.warns(UserWarning) as warning_info:
         result = runner.invoke(
-            cli.run, "--debug --defaults='~/.config/iSparrowRecord/tests'"
+            cli.run, f"--debug --defaults='{user_config_dir()}/faunanet_record/tests'"
         )
 
     assert result.exit_code == 0
@@ -96,7 +98,7 @@ def test_cli_run_custom(folders, empty_data_folder):
     path = str(Path(cfgdir) / "custom_example.yml")
 
     result = runner.invoke(
-        cli.run, f"--cfg={path} --defaults='~/.config/iSparrowRecord/tests'"
+        cli.run, f"--cfg={path} --defaults='{user_config_dir()}/faunanet_record/tests'"
     )
 
     assert result.exit_code == 0
@@ -143,7 +145,7 @@ def test_cli_run_custom_replace(folders, empty_data_folder):
 
     result = runner.invoke(
         cli.run,
-        f"--cfg={path} --replace={dictstr} --defaults='~/.config/iSparrowRecord/tests'",
+        f"--cfg={path} --replace={dictstr} --defaults='{user_config_dir()}/faunanet_record/tests'",
     )
 
     assert result.exit_code == 0

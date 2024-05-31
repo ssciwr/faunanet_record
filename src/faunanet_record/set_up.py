@@ -25,10 +25,10 @@ def make_directories(base_cfg_dirs: dict):
     """
     print("...making directories")
     if "data" not in base_cfg_dirs:
-        raise KeyError("The data folder for iSparrow must be given in the base config")
+        raise KeyError("The data folder for faunaanet must be given in the base config")
 
     if "config" not in base_cfg_dirs:
-        base_cfg_dirs["config"] = "iSparrowRecord"
+        base_cfg_dirs["config"] = "faunanet_record"
 
     isd = Path(base_cfg_dirs["data"]).expanduser().resolve()
     isc = Path(user_config_dir(base_cfg_dirs["config"])).expanduser().resolve()
