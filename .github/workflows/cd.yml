@@ -9,6 +9,15 @@ on:
         tags:
           - "*.*.*"
 
+    # only run when the tests pass 
+    workflow_run:
+      workflows: 
+        - CI
+      branches: 
+        - master
+      types:
+        - completed
+
     #allow manual trigger
     workflow_dispatch:
 
