@@ -2,6 +2,8 @@ from .utils import read_yaml, update_dict_recursive, dict_from_string
 from .runner import Runner
 from . import set_up as sus
 
+import faunanet_record
+from importlib.resources import files
 from pathlib import Path
 import warnings
 import click
@@ -15,10 +17,7 @@ def cli():
 
 
 @cli.command()
-@click.argument(
-    "cfg_dir",
-    type=str,
-)
+@click.option("--cfg_dir", type=str, default=str(files(faunanet_record)))
 def install(cfg_dir: str):
     "The directory given must contain 'default.yml' and 'install.yml'. Check out the defaults provided in the code repository under './config'."
     sus.set_up(cfg_dir)
