@@ -6,7 +6,7 @@
 # faunanet-record - Audio Recording facilities for the faunanet package
 The `faunanet-record` project is a simple collection of audio recording facilities for the [faunanet](https://github.com/ssciwr/iSparrow) project. While it can be used standalone, it is designed to cooperate with `faunanet`. 
 
-## Installation
+# Installation
 faunanet-record officially only supports Linux-based operating systems and tests on Ubuntu. That being said, it has been successfully deployed on macOS, too. However, it has never been tried on Windows. the following assumes an Ubuntu installation: 
 
 - Install portaudio and gcc (should already be there) first. `faunanet-record` depends on pyaudio, which in turn depends on portaudio. Hence, these steps are essential. 
@@ -39,7 +39,7 @@ git@github.com:ssciwr/iSparrowRecord.git
 python3 -m pip install -e .[dev,doc]
 ```
 
-## Usage
+# Usage
 Before being able to run `faunanet-record`, an environment must be set up that provides folders to read configuration files from and to put recorded audio files to. 
 This is done with the command (assuming `faunanet_record` is in you `PATH`): 
 ```bash
@@ -88,7 +88,7 @@ In the following the meaning of the parameters will be explained.
   - **channesls**: How many channels to use for recording. Determined by the microphone.
 
 
-## Run `faunanet-record` 
+## Running `faunanet-record` 
 After installation and setup, you can run `faunanet-record` from the terminal (assuming again it's accessible from you `PATH`): 
 ```bash 
 faunanet_record run
@@ -116,3 +116,7 @@ You can use `faunanet-record` in your own project by importing it:
 import faunanet_record as faunr 
 ```
 which exposes the `Runner` and `Recorder` classes per default. See the [docs](https://isparrowrecord.readthedocs.io/en/latest/) for documentation of available methods and classes.
+
+
+## `faunanet-record` and docker
+tbd
