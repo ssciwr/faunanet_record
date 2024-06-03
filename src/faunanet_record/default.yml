@@ -8,5 +8,5 @@ Recording:
   sample_rate: 48000
   length_s: 3
   channels: 1
-  input_device_index: 7
+  input_device_index: null
 
