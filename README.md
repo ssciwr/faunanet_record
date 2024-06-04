@@ -97,11 +97,11 @@ After installation and setup, you can run `faunanet-record` from the terminal (a
 faunanet_record run
 ```
 This will run `faunanet-record` with the default parameters defined above. If you want to run a session with customized paramters, you can use the same approach as before: 
-- write your custom config yaml file and save it at a convenient location, for instance at `~faunanet_configs/record_config.yml`. 
+- write your custom config yaml file and save it at a convenient location, for instance at `~faunanet_config/record_config.yml`. 
 - 
 - pass it to the `run` command: 
 ```bash 
-faunanet_record run --cfg=~faunanet_configs/record_config.yml 
+faunanet_record run --cfg=~faunanet_config/record_config.yml 
 ``` 
 You only have to include the parameters that you want to override in the custom config, but you must adhere to the hierarchy of the file. See the example below: 
 ```yaml
