@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-ENV CONFIG_FILE=""
+ENV RUN_CONFIG=""
 
 # install portaudio 
 RUN apt-get update \ 
@@ -15,4 +15,5 @@ WORKDIR /root
 RUN pip install faunanet-record && faunanet_record install
 
 # locally set up faunanet-record
-CMD ["/bin/sh", "-c", "if [ -z \"$CONFIG_FILE\" ] ; then faunanet_record run; else faunanet_record run --cfg=~/faunanet_config/${CONFIG_FILE}; fi"]
+# TODO: should this be a python script? 
+CMD ["/bin/bash", "-c", "if [[ -z \"$RUN_CONFIG\" ]] ; then faunanet_record run; else faunanet_record run --cfg=~/faunanet_config/${RUN_CONFIG}; fi"]
