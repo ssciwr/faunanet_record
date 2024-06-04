@@ -67,6 +67,8 @@ Recording:
   sample_rate: 48000
   length_s: 3
   channels: 1
+  input_device_index: null
+  chunk_size: 1000 
 ```
 In order to customize them, make a folder `faunanet_install` and put files `install.yml` and `default.yml` in it. Then copy the above content into the respective files and customize them 
 to your liking. `install.yml` will determine an output folder to be made, and `default.yml` will provide default parameters `faunanet-record` is run with when you do not pass a separate config file (see below).
@@ -86,7 +88,8 @@ In the following the meaning of the parameters will be explained.
   - **sample_rate**: The sample rate for recordings. Usually determined by the microphone you use. 
   - **lenth_s**: lenght of each recorded audio file in seconds. 
   - **channesls**: How many channels to use for recording. Determined by the microphone.
-
+  - **input_device_index**: pyaudio device index. use the faunanet_record `get_device_info` command to get an overview of the devices and the indices they correspond to.
+  - **chunk_size**: Buffer size that is requested from the device at once in frames.
 
 ## Running `faunanet-record` 
 After installation and setup, you can run `faunanet-record` from the terminal (assuming again it's accessible from you `PATH`): 
@@ -103,12 +106,13 @@ faunanet_record run --cfg=~faunanet_configs/record_config.yml
 You only have to include the parameters that you want to override in the custom config, but you must adhere to the hierarchy of the file. See the example below: 
 ```yaml
 Output:
-  runtime: inf
+  runtime: null 
   dump_config: True
   data_folder_suffix: "_test"
 Recording:
-  sample_rate: 32000
-  length_s: 30
+  sample_rate: 32000 
+  length_s: 30 
+  input_device_index: 3
 ```
 ## Using `faunanet-record` as a library 
 You can use `faunanet-record` in your own project by importing it: 
@@ -119,4 +123,20 @@ which exposes the `Runner` and `Recorder` classes per default. See the [docs](ht
 
 
 ## `faunanet-record` and docker
-tbd
+`faunanet-record` can be run via docker. To do this, you can run:
+
+```bash
+docker run -it --rm \
+-v ~/path/to/config/files:/root/faunanet_config \
+-v ~/path/to/data/files:/root/faunanet_data \
+-e CONFIG_FILE=filename.yml \
+--device=/dev/snd \
+faunanet_record:latest
+```
+The options mean the following: 
+- The `-v` options are optional. They can be used to mount host directories in container to get access to the recorded data or make config files available to the container.
+- The `-e` option sets the `CONFIG_FILE` environment variable to a name **in the container** of a configuration yml file supplied by the user. If left empty, the default config will be used. **If this shall be used, you need to mount the directory where the config file is located with `-v` into `/root/faunanet_config` in the container as can be seen in the command above. 
+- The `--device` option gives the container access to the host microphone hardware.
+- The `:latest`  tag will pull the latest image from dockerhub. 
+
+For other options, please consult the docker documentation.
