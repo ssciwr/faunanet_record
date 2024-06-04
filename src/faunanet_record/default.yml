@@ -1,7 +1,7 @@
 Output: 
   output_folder:  ~/faunanet_data
   runtime: 9 # for security: a run with default should not run forever
-  # run_until: 2024-04-04_12:05:24  # format: "%Y-%m-%d_%H:%M:%S"
+  # run_until: 2024-04-04_12:05:24  # format: "%Y-%m-%d_%H:%M:%S" Or use 'null' for no limii
   dump_config: True
   data_folder_suffix: ""
 Recording:
@@ -9,4 +9,4 @@ Recording:
   length_s: 3
   channels: 1
   input_device_index: null
-
+  chunk_size: 1000
