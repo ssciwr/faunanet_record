@@ -24,6 +24,17 @@ def install(cfg_dir: str):
 
 
 @cli.command()
+def get_device_info():
+    "Prints out the device information, especially indexes under which the devices are accessible. Useful for debugging."
+    import pyaudio
+
+    p = pyaudio.PyAudio()
+    for i in range(p.get_device_count()):
+        print(p.get_device_info_by_index(i))
+    p.terminate()
+
+
+@cli.command()
 @click.option("--cfg", help="custom configuration file", default="")
 @click.option("--debug", help="Enable debug output", is_flag=True)
 @click.option(
