@@ -142,7 +142,7 @@ The options mean the following:
 For other options, please consult the docker documentation.
 
 ## Troubleshooting 
-When you have trouble with getting output a first step might be to check what output device you are using. 
+- When you have trouble with getting a recording a good first step is to check what input device you are using. 
 For this, you can execute the command
 ```bash 
 faunanet-record get-device-info
@@ -150,7 +150,8 @@ faunanet-record get-device-info
 which prints you a list of index - info pairs. You can identify your microphone by name in the output and use its index in the config as the value for the `input_device_index` node. 
 Additional data like default sampling rate and number of channels are available, too. 
 
-An error relating to buffer overflows that is often connected to the chunk size parameter of the 
+- An error relating to buffer overflows is often connected to the chunk size parameter of the 
 recorder. Have a deeper look into the documentation of [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/docs/#pyaudio-documentation) for more information on the available parameters.
+**Make sure that (`lengh_s` * `sample_rate`) / `chunk_size` is an integer, or portaudio will throw an error due to discarded frames, see [here for details](https://stackoverflow.com/questions/10733903/pyaudio-input-overflowed)**.
 
 **IMPORTANT**: For the moment, the sample format is hardcoded to `int16` (`pyaudio.paInt16`). This may change in the future.
