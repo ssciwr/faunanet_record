@@ -86,7 +86,9 @@ def run(cfg: str, debug: bool, replace: str, defaults: str):
         # when custom_cfg and replace have no top level nodes, they are merged, otherwise the leaves of custom_cfg is updated with replace.
         if len(set(custom_cfg.keys()).intersection(set(replace_dict.keys()))) > 0:
             update_dict_recursive(custom_cfg, replace_dict)
+            print("... ...update values in custom config", custom_cfg, replace_dict)
         else:
+            print("... ...replacing values in custom config", custom_cfg, replace_dict)
             custom_cfg = custom_cfg | replace_dict
     else:
         custom_cfg = replace_dict
