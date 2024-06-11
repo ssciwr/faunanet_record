@@ -46,6 +46,25 @@ doc = [
     "sphinx-rtd-theme"
 ]
 
+[project.scripts]
+faunanet_record = "faunanet_record.cli:cli"
+
+[project.optional-dependencies]
+dev = [
+    "pytest", 
+    "pytest-cov",  
+    "coverage", 
+    "pre-commit",
+    "librosa", 
+]
+
+doc = [
+    "sphinx",
+    "myst-parser",
+    "sphinxcontrib-napoleon",
+    "sphinx-rtd-theme"
+]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
