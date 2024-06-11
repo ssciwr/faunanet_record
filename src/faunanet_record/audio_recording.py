@@ -7,7 +7,7 @@ import wave
 
 class RecorderBase(ABC):
     """
-    RecorderBase Abstract base class for any audio recording functionality that shall be used with iSparrow.
+    RecorderBase Abstract base class for any audio recording functionality that shall be used with faunanet.
 
 
     Methods:

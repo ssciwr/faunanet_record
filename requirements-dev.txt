@@ -1,6 +1,5 @@
-sphinx
-myst-parser
 pytest
 pytest-cov 
 coverage
 pre-commit
+librosa
