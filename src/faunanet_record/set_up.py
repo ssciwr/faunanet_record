@@ -9,7 +9,7 @@ CONFIG = None
 
 def make_directories(base_cfg_dirs: dict):
     """
-    make_directories Make all the directories for sparrow.
+    make_directories Make all the directories needed for faunanet_record.
 
 
     Args:
