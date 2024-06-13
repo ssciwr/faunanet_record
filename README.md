@@ -129,13 +129,13 @@ which exposes the `Runner` and `Recorder` classes per default. See the [docs](ht
 docker run -it --rm \
 -v ~/path/to/config/files:/root/faunanet_config \
 -v ~/path/to/data/files:/root/faunanet_data \
--e CONFIG_FILE=filename.yml \
+-e RUN_CONFIG=filename.yml \
 --device=/dev/snd \
 faunanet_record:latest
 ```
 The options mean the following: 
 - The `-v` options are optional. They can be used to mount host directories in container to get access to the recorded data or make config files available to the container.
-- The `-e` option sets the `CONFIG_FILE` environment variable to a name **in the container** of a configuration yml file supplied by the user. If left empty, the default config will be used. **If this shall be used, you need to mount the directory where the config file is located with `-v` into `/root/faunanet_config` in the container as can be seen in the command above. 
+- The `-e` option sets the `RUN_CONFIG` environment variable to a name **in the container** of a configuration yml file supplied by the user. If left empty, the default config will be used. **If this shall be used, you need to mount the directory where the config file is located with `-v` into `/root/faunanet_config` in the container as can be seen in the command above. 
 - The `--device` option gives the container access to the host microphone hardware.
 - The `:latest`  tag will pull the latest image from dockerhub. 
 
