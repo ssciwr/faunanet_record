@@ -2,6 +2,8 @@ from .utils import read_yaml, update_dict_recursive, dict_from_string
 from .runner import Runner
 from . import set_up as sus
 
+import faunanet_record
+from importlib.resources import files
 from pathlib import Path
 import warnings
 import click
@@ -15,13 +17,21 @@ def cli():
 
 
 @cli.command()
-@click.argument(
-    "cfg_dir",
-    type=str,
-)
+@click.option("--cfg_dir", type=str, default=str(files(faunanet_record).resolve()))
 def install(cfg_dir: str):
     "The directory given must contain 'default.yml' and 'install.yml'. Check out the defaults provided in the code repository under './config'."
     sus.set_up(cfg_dir)
+
+
+@cli.command()
+def get_device_info():
+    "Prints out the device information, especially indexes under which the devices are accessible. Useful for debugging."
+    import pyaudio
+
+    p = pyaudio.PyAudio()
+    for i in range(p.get_device_count()):
+        print(p.get_device_info_by_index(i))
+    p.terminate()
 
 
 @cli.command()
