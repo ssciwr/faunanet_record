@@ -97,11 +97,11 @@ After installation and setup, you can run `faunanet-record` from the terminal (a
 faunanet_record run
 ```
 This will run `faunanet-record` with the default parameters defined above. If you want to run a session with customized paramters, you can use the same approach as before: 
-- write your custom config yaml file and save it at a convenient location, for instance at `~faunanet_config/record_config.yml`. 
+- write your custom config yaml file and save it at a convenient location, for instance at `~faunanet/config/record_config.yml`. 
 - 
 - pass it to the `run` command: 
 ```bash 
-faunanet_record run --cfg=~faunanet_config/record_config.yml 
+faunanet_record run --cfg=~faunanet/config/record_config.yml 
 ``` 
 You only have to include the parameters that you want to override in the custom config, but you must adhere to the hierarchy of the file. See the example below: 
 ```yaml
@@ -127,7 +127,7 @@ which exposes the `Runner` and `Recorder` classes per default. See the [docs](ht
 
 ```bash
 docker run -it --rm \
--v ~/path/to/config/files:/root/faunanet_config \
+-v ~/path/to/config/files:/root/faunanet/config \
 -v ~/path/to/data/files:/root/faunanet/data \
 -e RUN_CONFIG=filename.yml \
 --device=/dev/snd \
@@ -135,7 +135,7 @@ faunanet_record:latest
 ```
 The options mean the following: 
 - The `-v` options are optional. They can be used to mount host directories in container to get access to the recorded data or make config files available to the container.
-- The `-e` option sets the `RUN_CONFIG` environment variable to a name **in the container** of a configuration yml file supplied by the user. If left empty, the default config will be used. **If this shall be used, you need to mount the directory where the config file is located with `-v` into `/root/faunanet_config` in the container as can be seen in the command above. 
+- The `-e` option sets the `RUN_CONFIG` environment variable to a name **in the container** of a configuration yml file supplied by the user. If left empty, the default config will be used. **If this shall be used, you need to mount the directory where the config file is located with `-v` into `/root/faunanet/config` in the container as can be seen in the command above. 
 - The `--device` option gives the container access to the host microphone hardware.
 - The `:latest`  tag will pull the latest image from dockerhub. 
 
