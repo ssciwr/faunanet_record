@@ -37,7 +37,6 @@ dev = [
     "coverage", 
     "pre-commit",
     "librosa", 
-    "soxr==0.4.0b1" # a temporary dependency until the librosa support for numpy 2.0 is sorted out: https://github.com/librosa/librosa/issues/1831
 ]
 
 doc = [
