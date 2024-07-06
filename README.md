@@ -54,12 +54,12 @@ The content of these files is as follows:
 - `install.yml` only provides a folder for putting data files into at the moment: 
 ```yaml
 Directories: 
-  data: ~/faunanet_data
+  data: ~/faunanet/data
 ```
 - `default.yml` provides all the parameters a run needs: 
 ``` yaml
 Output: 
-  output_folder:  ~/faunanet_data
+  output_folder:  ~/faunanet/data
   runtime: 9 
   data_folder_suffix: ""
   dump_config: True
@@ -128,7 +128,7 @@ which exposes the `Runner` and `Recorder` classes per default. See the [docs](ht
 ```bash
 docker run -it --rm \
 -v ~/path/to/config/files:/root/faunanet_config \
--v ~/path/to/data/files:/root/faunanet_data \
+-v ~/path/to/data/files:/root/faunanet/data \
 -e RUN_CONFIG=filename.yml \
 --device=/dev/snd \
 faunanet_record:latest

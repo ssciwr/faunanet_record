@@ -144,7 +144,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
     # unknown mode of operation gives exception
     with pytest.raises(ValueError) as exc_info:
         Recorder(
-            output_folder=Path.home() / "faunanet_data",
+            output_folder=Path.home() / "faunanet/data",
             mode="some_unknown_mode_with_typos_or_something",
         )
 
@@ -152,7 +152,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
 
     # not started
     recorder = Recorder(
-        output_folder=Path.home() / "faunanet_data",
+        output_folder=Path.home() / "faunanet/data",
         mode="stream",
     )
 
@@ -165,7 +165,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
     )
 
     recorder = Recorder(
-        output_folder=Path.home() / "faunanet_data",
+        output_folder=Path.home() / "faunanet/data",
         mode="stream",
     )
     # None objects held where they are not allowed
@@ -177,7 +177,7 @@ def test_audio_recorder_exceptions(audio_recorder_fx):
     assert str(exc_info.value) == "No portaudio resources. This object cannot be used"
 
     recorder = Recorder(
-        output_folder=Path.home() / "faunanet_data",
+        output_folder=Path.home() / "faunanet/data",
         mode="stream",
     )
 

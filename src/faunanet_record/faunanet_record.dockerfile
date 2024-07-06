@@ -16,4 +16,4 @@ RUN pip install faunanet-record && faunanet_record install
 
 # locally set up faunanet-record
 # TODO: should this be a python script? 
-CMD ["/bin/bash", "-c", "if [[ -z \"$RUN_CONFIG\" ]] ; then faunanet_record run; else faunanet_record run --cfg=~/faunanet_config/${RUN_CONFIG}; fi"]
+CMD ["/bin/bash", "-c", "if [[ -z \"$RUN_CONFIG\" ]] ; then faunanet_record run; else faunanet_record run --cfg=~/faunanet/config/${RUN_CONFIG}; fi"]
