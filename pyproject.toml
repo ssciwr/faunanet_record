@@ -20,7 +20,7 @@ dependencies = [
     "wave", 
     "pyaudio",
     "platformdirs", 
-    "click"
+    "click",
 ]
 
 [project.urls]

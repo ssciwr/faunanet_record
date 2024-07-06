@@ -16,13 +16,13 @@ def test_config_processing(install, folders):
 
     cfg = runner._process_configs(config, config_folder=TEST_CFGS)
     assert cfg["Output"]["runtime"] == 8
-    assert cfg["Output"]["output_folder"] == "~/faunanet_data/tests"
+    assert cfg["Output"]["output_folder"] == "~/faunanet/data/tests"
     assert cfg["Recording"]["sample_rate"] == 32000
     assert cfg["Recording"]["length_s"] == 4
     assert cfg["Recording"]["channels"] == 1
     assert cfg["Recording"]["mode"] == "record"
     assert cfg["Install"]["Directories"]["data"] == str(
-        Path.home() / "faunanet_data/tests"
+        Path.home() / "faunanet/data/tests"
     )
 
     # test that the timestamp is correct at least to the minute. Seconds can be too short...
@@ -95,7 +95,7 @@ def test_runner_creation(install, folders):
     assert "Output" in runner.config
     assert "Recording" in runner.config
     assert runner.output_path == str(
-        Path("~/faunanet_data").expanduser()
+        Path("~/faunanet/data").expanduser()
         / Path("tests")
         / (datetime.now().strftime("%y%m%d_%H%M%S") + "_runner_creation")
     )

@@ -1,3 +1,2 @@
 Directories: 
-  data: &data_output ~/faunanet_data
-  config: faunanet_record
+  data: ~/faunanet/data
