@@ -5,6 +5,7 @@ Output:
   dump_config: True
   data_folder_suffix: ""
 Recording:
+  recorder: pyaudio
   sample_rate: 48000
   length_s: 3
   channels: 1
