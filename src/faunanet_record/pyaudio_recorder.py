@@ -106,6 +106,7 @@ class PyAudioRecorder(RecorderBase):
                 while stop_condition(self) is False and self.stream.is_active():
                     filename = datetime.now().strftime(self.filename_format) + ".wav"
 
+                    # this could possibly be parallelized to avoid blocking the recording process
                     _, frames = self.stream_audio()
 
                     with wave.open(
@@ -216,7 +217,9 @@ class PyAudioRecorder(RecorderBase):
         """
 
         if "output_folder" not in cfg["Output"]:
-            raise ValueError("Output folder must be given in config node for PyAudioRecorder.")
+            raise ValueError(
+                "Output folder must be given in config node for PyAudioRecorder."
+            )
 
         folder = Path(cfg["Output"]["output_folder"]).expanduser()
 

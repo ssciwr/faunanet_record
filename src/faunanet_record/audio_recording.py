@@ -59,6 +59,10 @@ class RecorderBase(ABC):
         return str(Path(self.output_folder).absolute())
 
     @abstractmethod
+    def is_running(self):
+        pass
+
+    @abstractmethod
     def _close(self):
         pass
 
